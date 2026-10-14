@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C.ME314 Бүлэг 1. Уурхайн хажуугийн тогтворжилтын инженерчлэл: өгөгдлөөс шийдвэр хүртэл</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#ffffff; --ink:#000000; --ink-2:#474747; --ink-3:#767676;
+  --hair:#c9c9c9; --tint:#f2f2f2; --mid:#b3b3b3;
+  --serif:"Literata", "PT Serif", Georgia, "Times New Roman", serif;
+  --sans:"IBM Plex Sans", "PT Sans", "Segoe UI", Arial, sans-serif;
+  --mono:"IBM Plex Mono", Consolas, "Courier New", monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#000000; --ink:#ffffff; --ink-2:#bdbdbd; --ink-3:#8c8c8c;
+    --hair:#3d3d3d; --tint:#141414; --mid:#5c5c5c;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#000000; --ink:#ffffff; --ink-2:#bdbdbd; --ink-3:#8c8c8c;
+  --hair:#3d3d3d; --tint:#141414; --mid:#5c5c5c;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 1rem); scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto;}}
+*,*::before,*::after{box-sizing:inherit;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--serif); font-size:1.08rem; line-height:1.66;
+  font-variant-numeric:oldstyle-nums proportional-nums;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+img,svg{max-width:100%; height:auto;}
+a{color:inherit; text-decoration-thickness:1px; text-underline-offset:.18em;}
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible{outline:2px solid var(--ink); outline-offset:3px;}
+
+/* ---------- frame ---------- */
+.book{display:grid; grid-template-columns:1fr; max-width:1180px; margin:0 auto;}
+@media (min-width:1080px){ .book{grid-template-columns:250px minmax(0,1fr); gap:3.5rem;} }
+
+nav.toc{font-family:var(--sans); font-size:.86rem; line-height:1.45;}
+@media (min-width:1080px){
+  nav.toc{position:sticky; top:env(safe-area-inset-top,0px); align-self:start; height:100vh; overflow-y:auto; padding:2.6rem 0 3rem 1.6rem; border-right:1px solid var(--hair);}
+  nav.toc details{display:block;}
+  nav.toc summary{display:none;}
+}
+@media (max-width:1079px){
+  nav.toc{border-bottom:1px solid var(--ink); padding:.7rem 1.25rem;}
+  nav.toc summary{cursor:pointer; font-weight:600; list-style:none;}
+  nav.toc summary::-webkit-details-marker{display:none;}
+  nav.toc summary::after{content:" +";}
+  nav.toc details[open] summary::after{content:" −";}
+}
+nav.toc .toc-title{font-family:var(--serif); font-size:1.02rem; font-weight:600; margin:0 0 1.1rem;}
+nav.toc ol{list-style:none; margin:0; padding:0;}
+nav.toc > details > ol > li{margin:0 0 1rem;}
+nav.toc .part{font-weight:600; display:block; margin-bottom:.3rem; text-decoration:none;}
+nav.toc ol ol li a{display:block; padding:.14rem 0 .14rem .75rem; border-left:1px solid var(--hair); color:var(--ink-2); text-decoration:none;}
+nav.toc ol ol li a:hover{color:var(--ink); border-left-color:var(--ink);}
+nav.toc ol ol li a.here{color:var(--ink); border-left:2px solid var(--ink); padding-left:calc(.75rem - 1px); font-weight:600;}
+.theme-btn{margin-top:1.4rem; font:inherit; font-size:.8rem; background:none; color:var(--ink-2); border:1px solid var(--hair); padding:.3rem .6rem; cursor:pointer;}
+.theme-btn:hover{color:var(--ink); border-color:var(--ink);}
+
+main{padding:0 1.25rem 5rem; min-width:0;}
+.col{max-width:41rem;}
+@media (min-width:1080px){ main{padding:0 2rem 6rem 0;} }
+
+/* ---------- title page ---------- */
+.title-page{min-height:92vh; display:flex; flex-direction:column; justify-content:space-between; padding:3.2rem 0 2.4rem; border-bottom:3px double var(--ink); max-width:44rem;}
+.title-page .course{font-family:var(--sans); font-size:.92rem; color:var(--ink-2); margin:0;}
+.title-page .chapter-no{font-size:clamp(5.5rem, 17vw, 10.5rem); font-weight:300; line-height:.9; margin:2.2rem 0 .4rem; letter-spacing:-.03em; font-variant-numeric:lining-nums;}
+.title-page h1{font-size:clamp(1.9rem, 4.6vw, 2.85rem); font-weight:600; line-height:1.14; margin:0 0 1rem; letter-spacing:-.01em; text-wrap:balance;}
+.title-page .en{font-style:italic; font-size:1.18rem; color:var(--ink-2); margin:0 0 2.4rem;}
+.title-page .contents-line{font-size:1.05rem; margin:0; max-width:34rem;}
+.title-page .imprint{font-family:var(--sans); font-size:.9rem; line-height:1.55; margin-top:3rem;}
+.title-page .imprint b{font-family:var(--serif); font-size:1.08rem; font-weight:600;}
+
+/* ---------- parts ---------- */
+.part-opener{padding:5.5rem 0 3.2rem; border-top:3px double var(--ink); margin-top:4.5rem; max-width:44rem;}
+.part-opener .roman{font-size:clamp(4.5rem, 12vw, 7.5rem); font-weight:300; line-height:1; margin:0 0 1rem; font-variant-numeric:lining-nums;}
+.part-opener h2{font-size:clamp(1.6rem, 3.6vw, 2.2rem); font-weight:600; line-height:1.2; margin:0 0 1rem; text-wrap:balance;}
+.part-opener p{color:var(--ink-2); margin:0; max-width:36rem;}
+
+h3{font-size:1.5rem; font-weight:600; line-height:1.25; margin:3.6rem 0 1rem; text-wrap:balance;}
+h3 .no{font-weight:400; margin-right:.55em; font-variant-numeric:lining-nums;}
+h4{font-size:1.14rem; font-weight:600; font-style:italic; margin:2.3rem 0 .6rem;}
+p{margin:0 0 1.05em; hyphens:auto;}
+.lede{font-size:1.2rem; line-height:1.58;}
+.lede::first-letter{float:left; font-size:3.55em; line-height:.86; padding:.08em .1em 0 0; font-weight:600;}
+em.term{font-style:italic;}
+.en-t{font-style:italic; color:var(--ink-2);}
+strong{font-weight:600;}
+ul,ol{margin:0 0 1.1em; padding-left:1.4em;}
+li{margin-bottom:.35em;}
+.tag{font-family:var(--sans); font-size:.72rem; font-weight:600; border:1px solid var(--ink); padding:0 .32em; vertical-align:.12em; font-variant-numeric:lining-nums; white-space:nowrap;}
+
+/* ---------- equations ---------- */
+.eq{display:flex; align-items:baseline; gap:1rem; margin:1.4rem 0 1.4rem; padding:.3rem 0;}
+.eq .m{flex:1; text-align:center; font-style:italic; font-size:1.14rem; font-variant-numeric:lining-nums;}
+.eq .m .up{font-style:normal;}
+.eq .n{font-family:var(--sans); font-size:.85rem; color:var(--ink-2); font-variant-numeric:lining-nums;}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; margin:0 .15em;}
+.frac>span:first-child{border-bottom:1px solid currentColor; padding:0 .2em;}
+.frac>span:last-child{padding:0 .2em;}
+.where{font-size:.98rem; color:var(--ink-2);}
+
+/* ---------- tables ---------- */
+.tbl{margin:1.8rem 0 2.2rem; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+.tbl table:has(thead th:nth-child(4)){min-width:34rem;}
+table{border-collapse:collapse; width:100%; font-family:var(--sans); font-size:.86rem; line-height:1.42; font-variant-numeric:lining-nums tabular-nums;}
+caption{caption-side:top; text-align:left; font-family:var(--serif); font-size:.95rem; padding-bottom:.55rem;}
+caption b{font-weight:600;}
+thead th{border-top:2px solid var(--ink); border-bottom:1px solid var(--ink); text-align:left; font-weight:600; padding:.5rem .6rem .45rem; vertical-align:bottom;}
+tbody td, tbody th{padding:.48rem .6rem; border-bottom:1px solid var(--hair); vertical-align:top; text-align:left;}
+tbody tr:last-child td, tbody tr:last-child th{border-bottom:2px solid var(--ink);}
+tbody th{font-weight:600;}
+td.num, th.num{text-align:right; white-space:nowrap;}
+tr.focus td, tr.focus th{background:var(--tint);}
+
+/* ---------- figures ---------- */
+figure{margin:2.2rem 0 2.4rem;}
+figure .plate{border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); padding:1.2rem 0; overflow-x:auto;}
+figcaption{font-size:.93rem; line-height:1.5; margin-top:.7rem; color:var(--ink-2);}
+figcaption b{color:var(--ink); font-weight:600;}
+svg text{font-family:var(--sans);}
+.s-ink{stroke:var(--ink); fill:none;}
+.f-ink{fill:var(--ink);}
+.f-paper{fill:var(--paper);}
+.f-tint{fill:var(--tint);}
+.f-mid{fill:var(--mid);}
+.f-ink2{fill:var(--ink-2);}
+.s-hair{stroke:var(--hair);}
+.s-ink2{stroke:var(--ink-2);}
+
+/* ---------- boxes ---------- */
+.note{border-left:2px solid var(--ink); padding:.2rem 0 .2rem 1.1rem; margin:1.6rem 0; font-size:1rem;}
+.note .h{font-family:var(--sans); font-weight:600; font-size:.86rem; display:block; margin-bottom:.2rem;}
+.note p:last-child{margin-bottom:0;}
+.principle{margin:2rem 0; padding:1.2rem 0; border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); font-size:1.18rem; line-height:1.5; font-style:italic; text-align:center; text-wrap:balance;}
+.chain{list-style:none; padding:0; margin:1.4rem 0 1.8rem; display:flex; flex-wrap:wrap; gap:.4rem 0; counter-reset:c; font-family:var(--sans); font-size:.88rem;}
+.chain li{counter-increment:c; margin:0; display:flex; align-items:center;}
+.chain li span{border:1px solid var(--ink); padding:.3rem .6rem;}
+.chain li span::before{content:counter(c) ". "; font-weight:600;}
+.chain li:not(:last-child)::after{content:""; width:1.1rem; border-top:1px solid var(--ink); display:inline-block;}
+
+.exercise{border:3px double var(--ink); padding:1.3rem 1.4rem 1rem; margin:2.4rem 0;}
+.exercise > .ex-head{display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; align-items:baseline; border-bottom:1px solid var(--ink); padding-bottom:.6rem; margin-bottom:1rem;}
+.exercise .ex-no{font-family:var(--sans); font-weight:600; font-size:.9rem;}
+.exercise .ex-title{font-weight:600; font-size:1.18rem; flex:1 1 60%;}
+.exercise .ex-meta{font-family:var(--sans); font-size:.82rem; color:var(--ink-2);}
+.exercise h5{font-family:var(--sans); font-size:.9rem; font-weight:600; margin:1.3rem 0 .5rem;}
+.steps{counter-reset:st; list-style:none; padding:0;}
+.steps > li{counter-increment:st; position:relative; padding-left:2.2rem; margin-bottom:.75rem;}
+.steps > li::before{content:counter(st); position:absolute; left:0; top:.05rem; width:1.5rem; height:1.5rem; border:1px solid var(--ink); border-radius:50%; font-family:var(--sans); font-size:.78rem; font-weight:600; display:flex; align-items:center; justify-content:center; font-variant-numeric:lining-nums;}
+.menu{font-family:var(--sans); font-size:.86em; border-bottom:1px solid var(--ink); white-space:nowrap;}
+code, .xl{font-family:var(--mono); font-size:.84em; background:var(--tint); padding:.08em .35em; font-variant-numeric:lining-nums;}
+
+details.answer{margin:.4rem 0 1.2rem; font-size:.98rem;}
+details.answer summary{cursor:pointer; font-family:var(--sans); font-size:.84rem; font-weight:600; color:var(--ink-2); list-style:none; display:inline-block; border-bottom:1px dotted var(--ink-2);}
+details.answer summary::-webkit-details-marker{display:none;}
+details.answer summary:hover{color:var(--ink); border-bottom-color:var(--ink);}
+details.answer[open] summary{color:var(--ink); margin-bottom:.5rem;}
+details.answer > div{border-left:1px solid var(--ink); padding-left:1rem;}
+.qlist{list-style:none; padding:0; counter-reset:q;}
+.qlist > li{counter-increment:q; margin-bottom:.6rem; padding-left:2rem; position:relative;}
+.qlist > li::before{content:counter(q) "."; position:absolute; left:0; font-weight:600; font-variant-numeric:lining-nums;}
+
+/* ---------- calculator ---------- */
+.calc{display:grid; grid-template-columns:1fr; gap:1.2rem;}
+@media (min-width:720px){ .calc{grid-template-columns:minmax(0,1fr) 13.5rem;} }
+.calc .controls{font-family:var(--sans); font-size:.86rem;}
+.calc label{display:block; margin-bottom:.85rem;}
+.calc label .lv{display:flex; justify-content:space-between; margin-bottom:.15rem;}
+.calc label output{font-weight:600; font-variant-numeric:lining-nums tabular-nums;}
+.calc input[type=range]{width:100%; accent-color:var(--ink);}
+.calc .res{border-top:1px solid var(--ink); padding-top:.6rem; margin-top:.4rem;}
+.calc .res div{display:flex; justify-content:space-between; padding:.12rem 0; font-variant-numeric:lining-nums tabular-nums;}
+.calc .res .big{font-size:1.05rem; font-weight:600; border-top:1px solid var(--hair); margin-top:.3rem; padding-top:.35rem;}
+.calc .presets{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.8rem;}
+.calc .presets button{font:inherit; font-size:.78rem; background:var(--paper); color:var(--ink); border:1px solid var(--ink); padding:.25rem .55rem; cursor:pointer;}
+.calc .presets button:hover{background:var(--ink); color:var(--paper);}
+
+.colophon{margin-top:5rem; border-top:3px double var(--ink); padding-top:1.6rem; font-family:var(--sans); font-size:.84rem; color:var(--ink-2); max-width:41rem;}
+.refs{padding-left:0; list-style:none;}
+.refs li{padding-left:1.6rem; text-indent:-1.6rem; margin-bottom:.55rem; font-size:.97rem;}
+
+@media print{
+  nav.toc, .theme-btn, .calc .controls{display:none;}
+  .book{display:block;}
+  .part-opener{page-break-before:always;}
+  details.answer > div{display:block;}
+  body{font-size:10.5pt;}
+}
+</style>
+</head>
+<body>
+<div class="book">
+<nav class="toc" aria-label="Агуулга">
+<details id="tocd">
+<summary>Агуулга</summary>
+<p class="toc-title">Бүлэг 1</p>
+<ol>
+ <li><a class="part" href="#read">Энэ бүлгийг хэрхэн ашиглах вэ</a></li>
+ <li><a class="part" href="#part1">I. Лекц</a>
+  <ol>
+   <li><a href="#l-summary">Бүлгийн хураангуй</a></li>
+   <li><a href="#l1">1.1 Уурхайн хажуу — олон дэд системтэй инженерийн систем</a></li>
+   <li><a href="#l2">1.2 Хүчдэлийн үндэс ба Мор–Кулоны шалгуур</a></li>
+   <li><a href="#l3">1.3 Эвдрэлийн механизмын ангилал</a></li>
+   <li><a href="#l4">1.4 Аюулгүйн коэффициент ба хязгаарын тэнцвэрийн арга</a></li>
+   <li><a href="#l5">1.5 Тодорхойгүй байдал, эвдрэлийн магадлал, эрсдэл</a></li>
+   <li><a href="#l6">1.6 Бодлогын жишээ: ижил FoS, өөр шийдвэр</a></li>
+   <li><a href="#l7">1.7 Өгөгдлөөс шийдвэр хүртэлх мөчлөг</a></li>
+   <li><a href="#l8">1.8 Түгээмэл ташаа ойлголт</a></li>
+   <li><a href="#l9">1.9 Өөрийгөө шалгах</a></li>
+   <li><a href="#l10">1.10 Бүлгийн дүгнэлт</a></li>
+  </ol></li>
+ <li><a class="part" href="#part2">II. Семинар</a>
+  <ol>
+   <li><a href="#s1">С.1 Семинарын хүрээ</a></li>
+   <li><a href="#s2">С.2 Сэргээн санах ба зорилт</a></li>
+   <li><a href="#s3">С.3 90 минутын зураглал</a></li>
+   <li><a href="#s4">С.4 Өгөгдөл: геологи, бүтэц, өрөмдлөг</a></li>
+   <li><a href="#s5">С.5 Өгөгдөл: маркшейдер, ус, цаг агаар, үйлдвэрлэл</a></li>
+   <li><a href="#s6">С.6 Өгөгдлийн толь ба QA/QC дүрэм</a></li>
+   <li><a href="#s7">С.7 Excel тооцоо</a></li>
+   <li><a href="#s8">С.8 Өгөгдөл–нотолгоо–шийдвэрийн зураглал</a></li>
+   <li><a href="#s9">С.9 Програмаас үл хамаарах шалгалтын жагсаалт</a></li>
+   <li><a href="#s10">С.10 Бүлгийн даалгавар</a></li>
+   <li><a href="#s11">С.11 Шийдвэр ба загвар хариу</a></li>
+   <li><a href="#s12">С.12 Тодорхойгүй байдал ба хяналт</a></li>
+   <li><a href="#s13">С.13 Үнэлгээ ба гарах тасалбар</a></li>
+  </ol></li>
+ <li><a class="part" href="#part3">III. Rocscience практикум</a>
+  <ol>
+   <li><a href="#r0">Р.0 Програмыг олж авах</a></li>
+   <li><a href="#r1">Р.1 Гурван програм, нэг асуулт</a></li>
+   <li><a href="#r2">Р.2 Дасгал 1. Slide2</a></li>
+   <li><a href="#r3">Р.3 Дасгал 2. Slide2 магадлалт шинжилгээ</a></li>
+   <li><a href="#r4">Р.4 Дасгал 3. Dips</a></li>
+   <li><a href="#r5">Р.5 Дасгал 4. RS2 (сонголтот)</a></li>
+   <li><a href="#r6">Р.6 Тайлан ба үнэлгээ</a></li>
+   <li><a href="#r7">Р.7 Лицензийн түгээмэл алдаа</a></li>
+  </ol></li>
+ <li><a class="part" href="#app">Хавсралт</a>
+  <ol>
+   <li><a href="#glossary">Нэр томьёоны толь</a></li>
+   <li><a href="#sources">Эх сурвалж</a></li>
+  </ol></li>
+</ol>
+<button class="theme-btn" id="themeBtn" type="button">Цаасны өнгийг солих</button>
+</details>
+</nav>
+<main>
+<header class="title-page">
+ <p class="course">C.ME314 Уурхайн хажуугийн тогтворжилт<br>Бакалаврын түвшний хичээлийн ном</p>
+ <div>
+  <p class="chapter-no" aria-hidden="true">1</p>
+  <h1>Уурхайн хажуугийн тогтворжилтын инженерчлэл: өгөгдлөөс үйлдвэрлэлийн шийдвэр хүртэл</h1>
+  <p class="en">Mine Slope Stability Engineering: From Data to Operational Decisions</p>
+  <p class="contents-line">Лекц, 90 минутын семинар, Rocscience програм дээрх бие даасан практикум нэг дор. Өгөгдлөөс нотолгоо, нотолгооноос үйлдвэрлэлийн шийдвэр хүртэл.</p>
+ </div>
+ <div class="imprint">
+  <b>Доктор, профессор Б. Улаанбаатар</b><br>
+  Шинжлэх ухаан, технологийн их сургууль<br>
+  Геологи, уул уурхайн сургууль, Уурхайн технологийн тэнхим<br>
+  Улаанбаатар, 2026
+ </div>
+</header>
+
+<section id="read" class="col">
+ <h3>Энэ бүлгийг хэрхэн ашиглах вэ</h3>
+ <p>Бүлэг гурван хэсгээс бүрдэнэ. Эхний хэсэг бол <strong>лекц</strong>: онол, томьёо, нэг бүтэн бодлогын жишээ. Хоёр дахь хэсэг бол <strong>семинар</strong>: сургалтын синтетик өгөгдөл дээр бүлгээрээ өгөгдлийг нотолгоо болгон боловсруулж, эхний үйлдвэрлэлийн шийдвэрийн зураглалыг хийж, түүнийгээ хамгаална. Гурав дахь хэсэг бол <strong>Rocscience практикум</strong>: лекцэд ашигласан тоонуудыг Slide2, Dips, RS2 програмд оруулж, аюулгүйн коэффициент, тодорхойгүй байдал, кинематик боломжийн ойлголтыг өөрийн гараар туулна.</p>
+ <p>Хэсгүүдийг дарааллаар нь уншихыг зөвлөе. Лекцийг семинарын өмнө уншиж, өөрийгөө шалгах асуултад хариулна. Семинарын дараа практикумын дасгалуудыг долоо хоногийн дотор бие даан гүйцэтгэж, тайлангаа хавсаргана. Практикумын дасгал бүрт шалгах утга эсвэл хүлээгдэх чиг хандлага өгөгдсөн тул ганцаараа ажиллаж байхдаа ч алдаагаа өөрөө илрүүлэх боломжтой.</p>
+ <div class="note">
+  <span class="h">Нотолгооны тэмдэглэгээ</span>
+  <p>Энэ бүлгийн өгүүлбэр, тоо бүр ямар нотолгоонд тулгуурлаж байгааг дараах тэмдгээр ялгана. <span class="tag">E</span> тогтсон мэдлэг, нэр бүхий эх сурвалжтай. <span class="tag">I</span> сургалтын зориулалттай синтетик өгөгдөл, бодит уурхайн шалгуур биш. <span class="tag">S</span> тухайн уурхайд баталгаажуулах шаардлагатай. <span class="tag">U</span> тодорхойгүй, нэмэлт судалгаа хэрэгтэй. Семинар, практикумын бүх тоо <span class="tag">I</span> ангилалд хамаарна.</p>
+ </div>
+ <p>Практикумд Windows 10/11 (64-bit) компьютер, Microsoft Excel, Rocscience-ийн хүчинтэй лиценз хэрэгтэй. Лиценз авах замыг <a href="#r0">Р.0</a> хэсэгт тайлбарласан.</p>
+</section>
+<section id="part1" class="part-opener">
+ <p class="roman" aria-hidden="true">I</p>
+ <h2>Лекц. Уурхайн хажуу бол өнцгийн тоо биш, инженерийн систем</h2>
+ <p>Өгөгдлөөс шийдвэр хүртэлх долоон шаттай гинж юугаараа бүрддэг, ижил аюулгүйн коэффициенттэй хоёр сектор яагаад өөр шийдвэр шаардаж болохыг энэ хэсэгт үзнэ.</p>
+</section>
+<section class="col" id="l-summary">
+ <h3>Бүлгийн хураангуй</h3>
+ <p class="lede">Уурхайн хажуугийн тогтворжилт нь зөвхөн хажуугийн өнцөг сонгох, аюулгүйн коэффициент тооцох эсвэл программын үр дүн унших асуудал биш. Энэ нь геологи, чулуулгийн массив, газрын доорх ус, уурхайн геометр, тэсэлгээ, олборлолтын дараалал, мониторинг, хүний өртөлт болон үйлдвэрлэлийн хяналтыг нэгтгэсэн амьдралын мөчлөгт инженерийн систем юм.</p>
+ <p>Бүлгийн гол санаа нь «өгөгдөл өөрөө шийдвэр биш» гэсэн зарчимд тулгуурлана. Өгөгдөл нь эх үүсвэр, нэгж, байршил, хугацаа, чанар, эвдрэлийн механизм болон тодорхойгүй байдлын тайлбартай холбогдсон үед нотолгоо болж, нотолгоо нь үр дагавар, өртөлт, хяналтын нөхцөлтэй уялдсан үед үйлдвэрлэлийн шийдвэрийн үндэс болно.</p>
+ <p>Бүлэг нь хоёр давхаргаас бүрдэнэ. Нэг нь физик-инженерийн давхарга: хүчдэлийн төлөв, үр дүнтэй хүчдэл, шүргэх бат бөх, эвдрэлийн механизм, хязгаарын тэнцвэр, магадлалт үнэлгээ. Хоёр нь шийдвэрийн давхарга: өгөгдлийн чанар, нотолгооны нэгтгэл, эрсдэл, хяналтын арга хэмжээ, баталгаажуулалт. Хоёр давхаргыг тусад нь эзэмшсэн инженер тооцоо хийж чадна; хамтад нь эзэмшсэн инженер шийдвэр гаргаж чадна.</p>
+ <h4>Суралцахуйн үр дүн</h4>
+ <p>Энэ бүлгийг судалж дуусахад та дараах чадварыг эзэмшсэн байна.</p>
+ <ol>
+  <li>Уурхайн хажуугийн тогтворжилтыг олон дэд системтэй инженерийн асуудал болгон тайлбарлана.</li>
+  <li>Норм ба шүргэх хүчдэл, үр дүнтэй хүчдэлийн зарчим, Мор–Кулоны шалгуурыг томьёогоор хэрэглэнэ.</li>
+  <li>Хавтгай, шаантаг, дугуй, хөмрөх, чулуу унал, урсац хэлбэрийн эвдрэлийн механизмыг кинематик нөхцөлөөр ялгана.</li>
+  <li>Хязгаарын тэнцвэрийн аргаар аюулгүйн коэффициентийг тооцож, усны даралтын өөрчлөлтийн нөлөөг тоогоор үнэлнэ.</li>
+  <li>Тодорхойгүй байдлын эх үүсвэрийг ангилж, эвдрэлийн магадлал ба найдвартай байдлын индексийг тооцно.</li>
+  <li>Олон эх үүсвэрийн өгөгдлийг нэгтгэн, үйлдвэрлэлийн шийдвэрийн өгүүлбэр боловсруулна.</li>
+ </ol>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.1.</b> Суралцахуйн үр дүн, үйл ажиллагаа, нотолгоо</caption>
+  <thead><tr><th>Үр дүн</th><th>Суралцах үйл ажиллагаа</th><th>Суралцсаны нотолгоо</th></tr></thead>
+  <tbody>
+   <tr><th>1</th><td>Дэд системийн матриц (геологи, чулуулгийн массив, ус, геометр, мониторинг, эрсдэл)</td><td>Систем бүрийг гол асуулт, өгөгдлийн жишээтэй нь зөв ялгасан</td></tr>
+   <tr><th>2–3</th><td>Мор–Кулон, кинематик нөхцөлийн бодлого (лекц), стереонэт (практикум)</td><td>Механизм, томьёо, нэгжийг зөв сонгосон тооцоо</td></tr>
+   <tr><th>4–6</th><td>Жишээ 1.1-ийн FoS, тодорхойгүй байдлын тооцоо, семинарын шийдвэрийн зураглал</td><td>Нотолгоотой холбоотой, эзэн ба хяналттай шийдвэрийн бичвэр</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="l1">
+ <h3><span class="no">1.1</span>Уурхайн хажуу — олон дэд системтэй инженерийн систем</h3>
+ <p>Уурхайн хажуу <span class="en-t">(mine slope)</span> нь зөвхөн өнцөг бүхий геометр биш. Энэ нь геологийн тогтоц, чулуулгийн массив, геологийн тасралт, газрын доорх ус, ухалтын геометр, тэсэлгээ, хугацааны өөрчлөлт, мониторинг, хүний өртөлт болон үйлдвэрлэлийн хязгаарлалтаас бүрдэх амьдралын мөчлөгтэй инженерийн систем юм. Түүний гүйцэтгэл нь зураг төслийн үеийн таамаглал болон ашиглалтын үеийн бодит ажиглалтын хооронд тасралтгүй шалгагдана. <span class="tag">E</span></p>
+ <p><em class="term">Хажуугийн тогтворжилт</em> <span class="en-t">(slope stability)</span> гэдэг нь зөвхөн эвдрэх эсэхийг нэг тоогоор илэрхийлэх биш; боломжит эвдрэлийн механизм, хөдөлгөгч ба эсэргүүцэх нөхцөл, тодорхойгүй байдал, үр дагавар, мониторинг болон хяналтын арга хэмжээг хамтад нь үнэлэх инженерийн асуудал юм.</p>
+ <p>Хажууг гурван шатлалд авч үзвэл систем гэдэг нь тодорхой болно. Нэгдүгээрт, <em class="term">догол</em> <span class="en-t">(bench)</span> — тэсэлгээ, ухалтын нарийвчлал, чулуу унал хянагдах хамгийн жижиг хэмжээс. Хоёрдугаарт, <em class="term">доголын хоорондын хажуу</em> <span class="en-t">(inter-ramp slope)</span> — хоёр тээврийн зам хоорондын бүлэг доголын нийлбэр. Гуравдугаарт, <em class="term">нийт хажуу</em> <span class="en-t">(overall slope)</span> — дээд ирмэгээс ул хүртэлх бүтэн профиль. Шатлал бүрд эвдрэлийн масштаб, боломжит механизм, үр дагавар, хяналтын арга өөр байдаг: доголын эвдрэл ихэвчлэн ажлын аюулгүй байдлын асуудал, нийт хажуугийн эвдрэл нь уурхайн нөөц, тоног төхөөрөмж, ашиглалтын тасалдлын асуудал болно.</p>
+ <p>Хажуугийн зан төлөвийг тодорхойлдог хүчин зүйлсийг удирдах боломжоор нь ялгах нь инженерийн шийдвэрт тустай. <em class="term">Удирдах боломжгүй</em> буюу байгалийн нөхцөл: чулуулгийн төрөл, бүтцийн тогтоц, геологийн тасралтын чиглэл, өгөршлийн зэрэг, хур тунадасны дэглэм. <em class="term">Удирдах боломжтой</em> инженерийн шийдвэр: хажуугийн өнцөг, доголын өндөр ба өргөн, ухалтын дараалал, тэсэлгээний зураг төсөл, ус зайлуулалт ба даралт бууруулалт, хүн ба тоног төхөөрөмжийн өртөлт, мониторингийн нягтрал. Тогтворжилтын менежмент нь байгалийн нөхцөлийг таньж, инженерийн шийдвэрээр хариу үзүүлэх үйл явц юм.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.2.</b> Уурхайн хажуугийн систем ба дэд систем бүрийн гол асуулт</caption>
+  <thead><tr><th>Дэд систем</th><th>Гол асуулт</th><th>Өгөгдлийн жишээ</th></tr></thead>
+  <tbody>
+   <tr><th>Геологи</th><td>Ямар бүтэц, домэйн, тасралт хөдөлгөөнийг хянах вэ?</td><td>Зураглал, өрөмдлөгийн бүртгэл, ан цавын багц</td></tr>
+   <tr><th>Чулуулгийн массив</th><td>Ямар бат бөх, хэв гажилтын зан төлөв боломжтой вэ?</td><td>UCS, GSI, RMR, ан цавын гадаргуугийн бат бөх</td></tr>
+   <tr><th>Ус</th><td>Даралт хаана, хэзээ, ямар хурдтай өөрчлөгдөх вэ?</td><td>Пьезометр, хур тунадас, ус зайлуулалтын систем</td></tr>
+   <tr><th>Геометр, олборлолт</th><td>Ухалт ачаалал, тулгуур, өртөлтийг хэрхэн өөрчилсөн бэ?</td><td>Маркшейдерийн хэмжилт, ухалтын үе шат, тэсэлгээ</td></tr>
+   <tr><th>Мониторинг</th><td>Таамагласан ба ажиглагдсан гүйцэтгэл нийцэж байна уу?</td><td>Призм, радар, LiDAR, гүйцэтгэлийн шалгалт</td></tr>
+   <tr><th>Эрсдэл, шийдвэр</th><td>Хэн өртөх вэ, ямар зөвшөөрөл хэрэгтэй вэ?</td><td>Өртөлт, дохиоллын журам, үйлдвэрлэлийн нөлөө</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <figure>
+ <div class="plate"><svg viewBox="0 0 640 260" role="img" aria-label="Уурхайн хажуугийн инженерийн систем">
+  <rect x="235" y="103" width="170" height="54" class="f-ink s-ink" stroke-width="1.2"/><text x="320" y="135" text-anchor="middle" font-size="14" font-weight="600" class="f-paper">УУРХАЙН ХАЖУУ</text>
+  <g font-size="12.5" class="f-ink">
+   <rect x="20" y="16" width="168" height="50" class="f-paper s-ink" stroke-width="1"/><text x="104" y="36" text-anchor="middle" font-weight="600">Геологи, бүтэц</text><text x="104" y="53" text-anchor="middle" class="f-ink2" font-style="italic">тасралт, домэйн</text>
+   <rect x="236" y="16" width="168" height="50" class="f-paper s-ink" stroke-width="1"/><text x="320" y="36" text-anchor="middle" font-weight="600">Чулуулгийн массив</text><text x="320" y="53" text-anchor="middle" class="f-ink2" font-style="italic">UCS, GSI, RMR</text>
+   <rect x="452" y="16" width="168" height="50" class="f-paper s-ink" stroke-width="1"/><text x="536" y="36" text-anchor="middle" font-weight="600">Газрын доорх ус</text><text x="536" y="53" text-anchor="middle" class="f-ink2" font-style="italic">нүх сүвний даралт</text>
+   <rect x="20" y="194" width="168" height="50" class="f-paper s-ink" stroke-width="1"/><text x="104" y="214" text-anchor="middle" font-weight="600">Уурхайн геометр</text><text x="104" y="231" text-anchor="middle" class="f-ink2" font-style="italic">өнцөг, догол, дараалал</text>
+   <rect x="236" y="194" width="168" height="50" class="f-paper s-ink" stroke-width="1"/><text x="320" y="214" text-anchor="middle" font-weight="600">Тэсэлгээ, хугацаа</text><text x="320" y="231" text-anchor="middle" class="f-ink2" font-style="italic">массивын сулрал</text>
+   <rect x="452" y="194" width="168" height="50" class="f-paper s-ink" stroke-width="1"/><text x="536" y="214" text-anchor="middle" font-weight="600">Мониторинг, эрсдэл</text><text x="536" y="231" text-anchor="middle" class="f-ink2" font-style="italic">TARP, шийдвэр</text>
+  </g>
+  <path d="M104,66 L230,110" class="s-ink" stroke-width="1"/><path d="M320,66 L320,103" class="s-ink" stroke-width="1"/><path d="M536,66 L410,110" class="s-ink" stroke-width="1"/>
+  <path d="M104,194 L230,150" class="s-ink" stroke-width="1"/><path d="M320,194 L320,157" class="s-ink" stroke-width="1"/><path d="M536,194 L410,150" class="s-ink" stroke-width="1"/>
+ </svg></div>
+ <figcaption><b>Зураг 1.1.</b> Уурхайн хажуугийн инженерийн систем ба харилцан нөлөөлөх дэд системүүд. Дэд систем бүр хажуугийн гүйцэтгэлд нөлөөлж, нэгэн зэрэг бусдаас хамаарна. Эх сурвалж: зохиогчийн эмхэтгэл; Read &amp; Stacey (2009)-ийн нэгдсэн зураг төслийн үйл явцад тулгуурлав. <span class="tag">E</span></figcaption>
+</figure>
+ <p>Хажуугийн гүйцэтгэл цаг хугацааны хэмжээст өөрчлөгддөг. Ухалт өрнөхөд хажуугийн өндөр нэмэгдэж хөдөлгөгч хүч өсөх, тэсэлгээгээр гадаргуугийн массив сулрах, өгөршлөөр тасралтын гадаргуугийн бат бөх буурах, ус зайлуулалтын үр дүнгээр нүх сүвний усны даралт хэлбэлзэх зэрэг үйл явц зэрэгцэн явагдана. Иймд аюулгүйн коэффициентийн нэг удаагийн тооцоо нь тухайн мөчийн загварын үр дүн бөгөөд хугацааны хувьд байнгын баталгаа биш.</p>
+</section>
+<section class="col" id="l2">
+ <h3><span class="no">1.2</span>Хүчдэлийн үндэс ба Мор–Кулоны шалгуур</h3>
+ <p>Хажуугийн эвдрэл нь хөдөлгөгч <span class="en-t">(driving)</span> ба эсэргүүцэх <span class="en-t">(resisting)</span> нөлөөллийн тэнцвэр алдагдсаны илрэл. Хөдөлгөгч нөлөөллийг үндсэндээ массивын өөрийн жин бүрдүүлдэг; нэмэлт хөдөлгөгч хүчин зүйл нь газар хөдлөлтийн инерцийн хүч, ан цав дүүргэсэн усны даралт, дээд ирмэг дээрх ачаалал, тэсэлгээний динамик нөлөө байж болно. Эсэргүүцэх нөлөөллийг чулуулаг, хөрс, тасралтын гадаргуугийн шүргэх бат бөх <span class="en-t">(shear strength)</span> хангадаг.</p>
+ <h4>1.2.1 Хүчдэлийн төлөв ба үр дүнтэй хүчдэл</h4>
+ <p>Боломжит гулсалтын гадаргуугийн нэгж талбайд үйлчлэх хүчийг хоёр бүрэлдэхүүнд хуваана: гадаргуугт перпендикуляр норм хүчдэл σ ба гадаргуу дагуух шүргэх хүчдэл τ. Норм хүчдэл гадаргууг хавчих замаар шүргэлтийн эсэргүүцлийг үүсгэдэг тул тогтворжилтод эерэг, шүргэх хүчдэл гулсалтыг үүсгэдэг тул сөрөг үүрэгтэй. Нэгж нь kPa (kN/m²).</p>
+ <p>Терцагийн зарчмаар хөрс, чулуулгийн бат бөх нь бүтэн хүчдэлээр биш, харин нүх сүв дэх усны даралтыг хассан үр дүнтэй хүчдэлээр тодорхойлогдоно: <span class="tag">E</span></p>
+ <div class="eq"><div class="m">σ′ = σ − u</div><div class="n">(1.1)</div></div>
+ <p class="where">Энд σ′ — үр дүнтэй норм хүчдэл, kPa; σ — бүтэн норм хүчдэл, kPa; u — нүх сүвний усны даралт, kPa. Хүчинтэй нөхцөл: сүвэрхэг орчин ус ба хатуу фазаас тогтох, даралт тэнцвэржих хугацаа хүрэлцэх.</p>
+ <p>Энэ зарчмын шийдвэрлэх инженерийн утга: газрын доорх усны түвшин нэг метрээр өсөхөд гулсалтын гадаргуу дээрх үр дүнтэй хүчдэл буурч, боломжит эсэргүүцэл багасна. Тийм учраас ус зайлуулалт, даралт бууруулалт нь хажуугийн тогтворжилтыг сайжруулах хамгийн зардал хэмнэсэн арга: массивын бат бөхийг өөрчлөх боломжгүй ч u-г удирдах боломжтой.</p>
+ <h4>1.2.2 Мор–Кулоны эвдрэлийн шалгуур</h4>
+ <p>Хөрс, чулуулгийн шүргэх бат бөхийг инженерийн практикт хамгийн өргөн хэрэглэгддэг шугаман хэлбэрээр илэрхийлнэ:</p>
+ <div class="eq"><div class="m">τ<sub>f</sub> = c′ + σ′ tan φ′</div><div class="n">(1.2)</div></div>
+ <p class="where">τ<sub>f</sub> — эвдрэх үеийн шүргэх бат бөх, kPa; c′ — үр дүнтэй холбоо бат бөх, kPa; φ′ — үр дүнтэй дотоод шүргэлтийн өнцөг, градус. Хүчинтэй нөхцөл: ус зайлуулалттай (drained) нөхцөл, шугаман бүрхүүл хүчинтэй хүчдэлийн интервал.</p>
+ <p>Хоёр параметрийн физик утга өөр. Холбоо бат бөх c′ нь хүчдэлээс үл хамааран байх эсэргүүцэл — цементлэг, ан цавын бөглөрөл, чулуулгийн гүүрлэлтээс үүснэ; тасралтын гадаргуу нээлттэй, өгөршсөн бол c′ тэг рүү дөхнө. Шүргэлтийн өнцөг φ′ нь гадаргуугийн бартаа, хэмхдэсийн хэлбэр, нягтралаас хамаарах, хүчдэлээс шууд хамааралтай хэсэг. <em class="term">c′-ийн үнэлгээг хэт өндөр авах нь FoS-ыг хиймлээр өсгөх хамгийн түгээмэл алдаа</em>: c′ их шилжилтийн дараа бараг бүрэн эвдэрдэг тул дэс дараалсан эвдрэлийн тооцоонд үлдэц бат бөхийг авч үзэх шаардлагатай.</p>
+ <p class="principle">Бат бөх нь нэг тоо биш, гадаргуугийн төрөл, чийг, хугацааны хамаарал бүхий нөхцөлт хэмжигдэхүүн.</p>
+</section>
+<section class="col" id="l3">
+ <h3><span class="no">1.3</span>Эвдрэлийн механизмын ангилал</h3>
+ <p>Хажуугийн шинжилгээний хамгийн эхний бөгөөд хамгийн шийдвэрлэх алхам нь боломжит эвдрэлийн механизмыг таних явдал. Механизм нь тооцооны аргыг, аргачлал нь шаардлагатай өгөгдлийг, өгөгдөл нь хайгуулын ажлын хэмжээг тодорхойлдог. Механизмыг буруу таньсан тохиолдолд хичнээн нарийн программ, симуляци хийсэн ч үр дүн хамааралгүй болно: нэгэн төрлийн массивт зориулсан дугуй гулсалтын шинжилгээ нэг том хагарлаар хянагдах хавтгай эвдрэлийг хэзээ ч урьдчилан харуулахгүй.</p>
+ <p>Механизмыг тодорхойлоход хоёр төрлийн нотолгоо хэрэглэнэ: бүтцийн өгөгдөл (тасралтын унал, уналын чиглэл, тархалт, зай, гадаргуугийн шинж) ба хажуугийн геометр (өндөр, налуугийн өнцөг, чиглэл). Эдгээрийг стереографик буюу кинематик шинжилгээгээр тулгаж, хөдөлгөөн геометрийн хувьд боломжтой эсэхийг шалгана. Кинематик боломж байхгүй бол бат бөхийн тооцоо шаардлагагүй; кинематик боломж байгаа бол бат бөх, усны төлөвөөр тогтворжилтыг үнэлнэ.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.3.</b> Ил уурхайн хажуугийн үндсэн эвдрэлийн механизм</caption>
+  <thead><tr><th>Механизм</th><th>Физик зам</th><th>Кинематик нөхцөл (товч)</th></tr></thead>
+  <tbody>
+   <tr><th>Хавтгай <span class="en-t">planar</span></th><td>Нэг тасралтын хавтгай дагуу блок гулсах</td><td>Уналын чиглэл хажуугийн чиглэлтэй ±20°; шүргэлтийн өнцөг &lt; унал &lt; хажуугийн налуу</td></tr>
+   <tr><th>Шаантаг <span class="en-t">wedge</span></th><td>Хоёр тасралтын огтлолын шугам дагуу блок гулсах</td><td>Огтлолын шугамын унал шүргэлтийн өнцгөөс их, хажуу руу гарах боломжтой</td></tr>
+   <tr><th>Дугуй <span class="en-t">circular</span></th><td>Нэгэн төрлөвшсөн, чиглэлээс сул хамаарах массивт дугуйрсан гадаргуугаар гулсах</td><td>Тасралтын нөлөө бус, бат бөх ба масштаб давамгайлна</td></tr>
+   <tr><th>Хөмрөх <span class="en-t">toppling</span></th><td>Хажуу руу эгц унал бүхий нимгэн блок суурийн эргэн тойронд хөмрөх</td><td>Блокийн өндөр/өргөний харьцаа шийдвэрлэнэ; гулсалт бус эргэлт</td></tr>
+   <tr><th>Чулуу унал <span class="en-t">rockfall</span></th><td>Бие даасан блок гадаргуугаас салж унах, дүүлэх, эргэлдэх</td><td>Траекторийн шинжилгээ; бэхлэгдээгүй жижиг блок</td></tr>
+   <tr><th>Урсац <span class="en-t">flow/debris</span></th><td>Өндөр ус агуулсан сул материал шингэн шиг урсах</td><td>Овоолго, хаягдал, хур борооны дараах нөхцөл</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>Механизмыг ангилахдаа масштабыг заавал хамт бичнэ: ижил хажуунд доголын хэмжээст шаантаг эвдрэл, доголын хоорондын хэмжээст хавтгай эвдрэл, нийт хажуугийн хэмжээст дугуй-нийлмэл эвдрэл зэрэгцэн боломжтой байж болно. Иймд «хажуугийн механизм» гэж нэг дүгнэлт гаргах бус, хэмжээс тус бүрээр механизмын хүснэгт гаргах нь мэргэжлийн практик (Read &amp; Stacey, 2009). <span class="tag">E</span></p>
+ <div class="note">
+  <span class="h">Нийлмэл ба дэс дараалсан эвдрэл</span>
+  <p>Хэсэг гадаргуу дагуу бат бөх эвдэрч, ачаалал хөрш хэсэгт дахин хуваарилагдан эвдрэл шатлан өрнөх тохиолдол хамгийн их шилжилт бүхий, урьдчилан харахад хүнд төрөл юм. Мониторингийн хандлагын шинжилгээ энд онцгой чухал (§1.7).</p>
+ </div>
+</section>
+<section class="col" id="l4">
+ <h3><span class="no">1.4</span>Аюулгүйн коэффициент ба хязгаарын тэнцвэрийн арга</h3>
+ <p>Аюулгүйн коэффициент <span class="en-t">(Factor of Safety, FoS)</span> нь хажуугийн тогтворжилтын инженерчлэлд хамгийн өргөн хэрэглэгддэг үзүүлэлт бөгөөд хамгийн их андуурагддаг хэмжигдэхүүн. Түүний тодорхойлолт энгийн: боломжит гулсалтын гадаргуу дээрх эсэргүүцэх нөлөөллийн нийлбэрийг хөдөлгөгч нөлөөллийн нийлбэрт харьцуулсан харьцаа. Гэхдээ энэ харьцааг хүчээр, моментоор, эсвэл бат бөхөөр тодорхойлж болох тул тооцооны аргын хэлбэрээс хамааран нэг хажуунд бага зэрэг өөр утга гарч болно.</p>
+ <p>Хүчний тэнцвэрээр (хавтгай гулсалт, нэг блок):</p>
+ <div class="eq"><div class="m">FoS = <span class="frac"><span>ΣR</span><span>ΣT</span></span> = <span class="frac"><span>c′A + N′ tan φ′</span><span>W sin β</span></span></div><div class="n">(1.3)</div></div>
+ <p class="where">ΣR — эсэргүүцэх хүчний нийлбэр, kN; ΣT — хөдөлгөгч хүчний нийлбэр, kN; N′ = W cos β − uA — үр дүнтэй норм хүч, kN; A — гулсалтын гадаргуугийн талбай, m²; β — гадаргуугийн унал, градус.</p>
+ <p>Эргэлтийн (дугуй) механизмд моментийн тэнцвэрээр: FoS = ΣM<sub>R</sub> / ΣM<sub>D</sub> (1.4). Тооцооны аргууд (Bishop, Janbu, Spencer, Morgenstern–Price) энэ харьцааг бүх зүсэлтэд ижил гэж үзэн итерацаар шийднэ. <span class="tag">E</span></p>
+ <p>Хязгааргүй хажуугийн (infinite slope) шийд нь ойлголтыг хамгийн тод харуулдаг сургалтын жишээ. Хажуугийн урт зузаанаас хамаагүй их, гулсалтын гадаргуу хажууны гадаргуутай параллель гэж үзвэл:</p>
+ <div class="eq"><div class="m">FoS = <span class="frac"><span>c′ + (γz cos²β − u) tan φ′</span><span>γz sin β cos β</span></span></div><div class="n">(1.5)</div></div>
+ <p class="where">γ — эзэлхүүний жин, kN/m³; z — гулсалтын гадаргуугийн гүн, m; u — тухайн гүний нүх сүвний усны даралт, kPa. Хэрэв c′ = 0 ба ус байхгүй бол FoS = tan φ′ / tan β болж хялбарчина — холбоогүй овоолгын хамгийн үндсэн дүрэм.</p>
+
+ <figure>
+ <div class="plate">
+ <div class="calc">
+  <svg id="fosSvg" viewBox="0 0 440 300" role="img" aria-labelledby="f-sum">
+   <title id="f-sum">Хязгааргүй хажуугийн FoS</title>
+   <line x1="14" y1="278" x2="426" y2="278" class="s-hair" stroke-width="1"/>
+   <polygon id="f-slope" class="f-tint s-ink" stroke-width="1.4"/>
+   <line id="f-slip" class="s-ink" stroke-width="1.6" stroke-dasharray="6 4"/>
+   <path id="f-w" class="s-ink" stroke-width="1.4" marker-end="url(#farw)"/>
+   <text id="f-wlab" font-size="12.5" class="f-ink" font-style="italic">W</text>
+   <path id="f-uarc" class="s-ink2" stroke-width="1" stroke-dasharray="3 3"/>
+   <text id="f-blbl" font-size="12.5" class="f-ink" font-style="italic">β</text>
+   <defs><marker id="farw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker></defs>
+  </svg>
+  <div class="controls">
+   <label><span class="lv"><span>Хажуугийн налуу <i>β</i></span><output id="o-fbeta"></output></span><input id="in-fbeta" type="range" min="20" max="50" step="1" value="35"></label>
+   <label><span class="lv"><span>Шүргэлтийн өнцөг <i>φ′</i></span><output id="o-fphi"></output></span><input id="in-fphi" type="range" min="15" max="42" step="1" value="32"></label>
+   <label><span class="lv"><span>Холбоо бат бөх <i>c′</i></span><output id="o-fc"></output></span><input id="in-fc" type="range" min="0" max="50" step="1" value="10"></label>
+   <label><span class="lv"><span>Усны даралтын харьцаа <i>r<sub>u</sub></i></span><output id="o-fru"></output></span><input id="in-fru" type="range" min="0" max="0.6" step="0.05" value="0"></label>
+   <div class="res">
+    <div><span>γ (тогтмол)</span><span>20 кН/м³</span></div>
+    <div><span><i>z</i> (тогтмол)</span><span>6 м</span></div>
+    <div class="big"><span>FoS</span><span id="o-ffos"></span></div>
+   </div>
+   <div class="presets">
+    <button type="button" id="p-fdry">Хуурай, r<sub>u</sub>=0</button>
+    <button type="button" id="p-fwet">Устай, r<sub>u</sub>=0,4</button>
+   </div>
+  </div>
+ </div>
+ </div>
+ <figcaption><b>Зураг 1.2.</b> Хязгааргүй хажуугийн FoS-ийн интерактив тооцоолуур, тэгшитгэл (1.5). Уснй даралтын харьцаа r<sub>u</sub> нэмэгдэхэд гулсалтын гадаргуу дээрх үр дүнтэй хүчдэл буурч FoS шууд буурна; γ, z-ийг тогтмол авав. Энэ тоонууд сургалтын зориулалттай бөгөөд §1.6-гийн блок жишээтэй ижил биш, зөвхөн чиг хандлагыг харуулна. <span class="tag">I</span></figcaption>
+</figure>
+
+ <p>Аюулгүйн коэффициентийг тайлбарлахад заавал хамт бичих ёстой дөрвөн нөхцөл: (i) ямар механизм ба гулсалтын гадаргуу, (ii) ямар бат бөхийн параметр ба тэдгээрийн эх сурвалж, (iii) ямар усны төлөв, (iv) ямар геометр ба ачааллын нөхцөл. Эдгээргүйгээр бичигдсэн «FoS = 1.3» гэсэн тоо мэргэжлийн мэдээлэл биш, зөвхөн тоо юм.</p>
+</section>
+<section class="col" id="l5">
+ <h3><span class="no">1.5</span>Тодорхойгүй байдал, эвдрэлийн магадлал, эрсдэл</h3>
+ <p>Хажуугийн шинжилгээний оролтууд яг таг тоо биш. Бат бөхийн параметр дээжийн тоо, туршилтын арга, масштабын нөлөөнөөс хамааран тархалттай; нүх сүвний усны даралт цаг агаар, ус зайлуулалтын үр дүнгээс хамааран хэлбэлздэг; тасралтын чиглэл орон зайд өөрчлөгддөг. Иймд FoS-ын нэг тоон утга нь оролтын хамгийн боломжит утгад тохирох нэг цэг бөгөөд тодорхойгүй байдлын хэмжээг өөртөө агуулдаггүй.</p>
+ <p>Тодорхойгүй байдлыг эх үүсвэрээр нь гурав ангилах нь практикт тустай: <em class="term">байгалийн хэлбэлзэл</em> (natural variability) — багасдаггүй, зөвхөн тодорхойлогддог; <em class="term">мэдлэгийн хязгаар</em> (epistemic uncertainty) — нэмэлт хайгуулаар багасдаг; <em class="term">загварын тодорхойгүй байдал</em> (model uncertainty) — эсрэг шинжилгээ, мониторингийн тулгалтаар шалгагддаг. <span class="tag">E</span></p>
+ <p>Магадлалт шинжилгээ нь оролтыг тархалт хэлбэрээр тодорхойлж, гүйцэтгэлийн функцийг олон удаа тооцоолон FoS-ын тархалтыг гаргадаг. Монте-Карлогийн симуляцийн үед эвдрэлийн магадлал:</p>
+ <div class="eq"><div class="m">PoF = <span class="frac"><span>N(FoS &lt; 1)</span><span>N<sub>нийт</sub></span></span></div><div class="n">(1.6)</div></div>
+ <p class="where">N(FoS &lt; 1) — эвдрэлийн нөхцөл биелсэн симуляцийн тоо; N<sub>нийт</sub> — нийт симуляцийн тоо. Жишээ: 10 000 симуляциас 350-д FoS &lt; 1 гарвал PoF = 350/10 000 = 3,5 %.</p>
+ <p>FoS-ын тархалтыг нэг үзүүлэлтээр илэрхийлэхэд найдвартай байдлын индексийг хэрэглэнэ:</p>
+ <div class="eq"><div class="m">β = <span class="frac"><span>μ<sub>FoS</sub> − 1</span><span>σ<sub>FoS</sub></span></span></div><div class="n">(1.7)</div></div>
+ <p class="where">μ<sub>FoS</sub> — FoS-ын дундаж; σ<sub>FoS</sub> — FoS-ын стандарт хазайлт. β нь дундаж FoS хязгаарын төлөвөөс хэдэн стандарт хазайлтаар хол байгааг хэмждэг (тархалт ойролцоогоор нормаль байх нөхцөлд хүчинтэй).</p>
+ <p>Гэхдээ эвдрэлийн магадлал ч гэсэн шийдвэрийн бүрэн үндэс болдоггүй, учир нь тэр эвдрэл болбол юу болохыг агуулдаггүй. Эрсдэлийг магадлал ба үр дагаврыг хамтад нь авч үзсэн үнэлгээ гэж тодорхойлно:</p>
+ <div class="eq"><div class="m">Эрсдэл = f (L, C, E, K)</div><div class="n">(1.8)</div></div>
+ <p class="where">L — тохиолдох магадлал; C — үр дагавар (хүн, тоног төхөөрөмж, үйлдвэрлэл); E — өртөлт (аюулт бүсэд байх хугацаа, давтамж); K — хяналтын нөхцөл ба үр дүнтэй байдал. Эрсдэлийг FoS эсвэл PoF-ын ганц утгаар орлуулахгүй.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.4.</b> FoS, PoF, үр дагавар, эрсдэлийн мэдээллийн ялгаа</caption>
+  <thead><tr><th>Үзүүлэлт</th><th>Юуг хариулдаг вэ</th><th>Юуг агуулдаггүй вэ</th></tr></thead>
+  <tbody>
+   <tr><th>FoS</th><td>«Хажуу тэнцвэртэй үү?» — нэг загвар, нэг механизм, нэг нөхцөл дэх харьцаа</td><td>Тодорхойгүй байдал, үр дагавар</td></tr>
+   <tr><th>PoF</th><td>«Хэр магадлалтай вэ?» — оролтын тархалт дахь эвдрэлийн эзлэх хувь</td><td>Үр дагавар, өртөлт</td></tr>
+   <tr><th>Үр дагавар C</th><td>«Болбол ямар хохирол вэ?»</td><td>Магадлал</td></tr>
+   <tr><th>Эрсдэл</th><td>«Ямар үйлдэл, ямар хяналт шаардлагатай вэ?»</td><td>—, өөрөө нэгдсэн үнэлгээ</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>Өртөлт нь эрсдэлийн тэгшитгэл дэх хамгийн хурдан удирдагддаг хувьсагч. Бат бөхийг сайжруулах, усны даралтыг буулгах арга хэмжээ хэдэн долоо хоног, сараар хэрэгжинэ; харин ажлын бүсийг хааж, тоног төхөөрөмжийг зайлуулж, ажилтныг аюулт бүсээс гаргах хяналт хэдхэн минутад хэрэгждэг. Тиймээс «эрсдэлийг хэрхэн бууруулах вэ?» гэсэн асуултын хамгийн хурдан хариулт ихэвчлэн өртөлтийн хяналт байдаг.</p>
+</section>
+<section class="col" id="l6">
+ <h3><span class="no">1.6</span>Бодлогын жишээ: ижил FoS, өөр шийдвэр</h3>
+ <p>Доорх өгөгдөл сургалтын синтетик өгөгдөл бөгөөд бодит уурхайн зураг төслийн шалгуур биш. <span class="tag">I</span></p>
+ <div class="note">
+  <span class="h">Нөхцөл — үндсэн тооцоо</span>
+  <p>Хавтгай гулсалтын блок: c′ = 25 kPa, φ′ = 32°, γ = 25 kN/m³, гулсалтын гадаргуугийн унал β = 35°, талбай A = 100 m², блокийн жин W = 6 000 kN, нүх сүвний усны даралт u = 15 kPa.</p>
+ </div>
+ <p><strong>Алхам 1. Хөдөлгөгч ба норм хүч.</strong> T = W sin β = 6 000 · sin 35° = 3 442 кН. N = W cos β = 6 000 · cos 35° = 4 915 кН.</p>
+ <p><strong>Алхам 2. Үр дүнтэй норм хүч, хуурай.</strong> U = uA = 15 · 100 = 1 500 кН. N′ = 4 915 − 1 500 = 3 415 кН. R = c′A + N′ tan φ′ = 2 500 + 3 415 · 0,6249 = 4 634 кН. <strong>FoS = 4 634 / 3 442 = 1,35.</strong></p>
+ <p><strong>Алхам 3. Мэдрэмтгий байдал — усны даралт хоёр дахин өсвөл.</strong> u = 30 kPa бол U = 3 000 кН, N′ = 1 915 кН, R = 2 500 + 1 197 = 3 697 кН. <strong>FoS = 3 697 / 3 442 = 1,07.</strong> Зөвхөн усны даралтын өөрчлөлт бусад бүх параметр хөдөлгөөнгүй байхад FoS-ыг 1,35-аас 1,07 болгон буулгаж, хажууг хязгаарын төлөвт хүргэж байна. Энэ бол ус зайлуулалт, даралт бууруулалтыг тогтворжилтын хамгийн үр дүнтэй хяналт гэж үзэх тоон шалтгаан.</p>
+ <div class="note">
+  <span class="h">Практикумтай холбоо</span>
+  <p>Энэ блокийн параметрийг <a href="#r2">Дасгал 1</a>-т Slide2 програмд оруулж, хязгаарын тэнцвэрийн зүсэлтийн аргаар давтан тооцож, гар тооцоотой харьцуулна.</p>
+ </div>
+
+ <h4>1.6.1 Ижил FoS, өөр нотолгоо, өөр шийдвэр</h4>
+ <p>Хоёр секторын дундаж аюулгүйн коэффициент ижил (μ<sub>FoS</sub> = 1,25) боловч нотолгооны нөхцөл эсрэгээрээ өөр.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.5.</b> Ижил FoS, өөр нотолгооны нөхцөл <span class="tag">I</span></caption>
+  <thead><tr><th>Үзүүлэлт</th><th>Сектор A</th><th>Сектор B</th></tr></thead>
+  <tbody>
+   <tr><th>FoS</th><td class="num">1,25</td><td class="num">1,25</td></tr>
+   <tr><th>Механизм</th><td>Тодорхойлогдсон дугуй гулсалт</td><td>Тархалт өндөр хагарал дагуух боломжит шилжилт; баталгаажаагүй</td></tr>
+   <tr><th>Усны төлөв</th><td>3 пьезометр; тогтвортой хандлага</td><td>1 пьезометр; 18 цагийн тасалдал</td></tr>
+   <tr><th>Мониторинг</th><td>4 призм; эталон хүрээнд</td><td>Радарын хэвийн бус дүр зураг</td></tr>
+   <tr><th>Өртөлт</th><td>Доод хэсэг хаалттай</td><td>Тээврийн гол зам, тоног төхөөрөмж</td></tr>
+   <tr><th>σ<sub>FoS</sub> (үнэлгээ)</th><td class="num">≈ 0,08</td><td class="num">≈ 0,20</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>(1.7)-ыг хэрэглэвэл β<sub>A</sub> = (1,25 − 1)/0,08 = <strong>3,1</strong>, β<sub>B</sub> = (1,25 − 1)/0,20 = <strong>1,25</strong>. Нормаль тархалтын таамаглалд β<sub>A</sub> = 3,1 нь эвдрэлийн магадлал ойролцоогоор <strong>0,1 %</strong>, β<sub>B</sub> = 1,25 нь ойролцоогоор <strong>10,6 %</strong>-д тохирно (Python-оор баталгаажуулсан утга). Ижил аюулгүйн коэффициенттэй хоёр сектор эвдрэлийн магадлалын хувьд зуу дахин зөрж байна.</p>
+ <p><strong>Шийдвэр.</strong> A секторт батлагдсан нөхцөл, дохиоллын журамд нийцсэн хэвийн мониторинг үргэлжилж болно (β<sub>A</sub> ≈ 3,1). B секторт өртөлтийн хязгаарлалт, өгөгдлийн шалгалт, геотехникийн хяналт, загварын шинэчлэл, эрх бүхий шийдвэрийн эзний зөвшөөрөл шаардана (β<sub>B</sub> ≈ 1,25). Энэ бол универсал шалгуур биш, өгөгдсөн сургалтын нөхцөлд гаргасан хамгаалагдах шийдвэр.</p>
+</section>
+<section class="col" id="l7">
+ <h3><span class="no">1.7</span>Өгөгдлөөс шийдвэр хүртэлх долоон шаттай мөчлөг</h3>
+ <p>Мэргэжлийн интерфейс: геологич чулуулгийн төрөл, тасралт, өгөршлийг тайлбарлана; геотехникийн инженер механизм, параметр, тооцоо, мониторингийн тайлбарыг боловсруулна; маркшейдер бодит геометр ба шилжилтийг хэмжинэ; гидрогеологич усны системийг үнэлнэ; тэсэлгээний инженер массивын сулралыг хянана; үйлдвэрлэлийн инженер ухалтын дараалал, өртөлтийг удирдана. Нэг мэргэжлийн мэдээлэл дангаараа үйлдвэрлэлийн шийдвэр болж чадахгүй. <span class="tag">E</span></p>
+ <p><em class="term">Өгөгдлийн эзэн</em> (data owner) өгөгдлийг үүсгэж, чанарыг баталгаажуулах үүрэгтэй; <em class="term">шийдвэрийн эзэн</em> (decision owner) тухайн уурхайн эрх мэдлийн матриц, дохиоллын журмын (TARP) дагуу үйл ажиллагааг зөвшөөрөх, хязгаарлах эсвэл зогсоох эрхтэй. Оюутан шийдвэрийн нотолгоог бэлтгэх чадвар эзэмших боловч бодит уурхайн эрх мэдлийг зохиомлоор өөртөө оноохгүй.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.6.</b> Өгөгдлөөс үйлдвэрлэлийн шийдвэр хүртэлх долоон шат</caption>
+  <thead><tr><th>Шат</th><th>Инженерийн асуулт</th><th>Алдаа гарвал</th></tr></thead>
+  <tbody>
+   <tr><th>1. Data</th><td>Юу, хаана, хэзээ, ямар нэгжээр хэмжсэн бэ?</td><td>Буруу солбицлын систем, нэгж, хугацааны тэмдэглэл</td></tr>
+   <tr><th>2. Information</th><td>Ямар дүрслэл, үзүүлэлт болгон боловсруулсан бэ?</td><td>Буруу нэгтгэл, нөхцөл дутуу</td></tr>
+   <tr><th>3. Interpretation</th><td>Ямар механизм, өөр тайлбар байж болох вэ?</td><td>Хамаарлыг шалтгаан гэж үзэх</td></tr>
+   <tr><th>4. Risk</th><td>Магадлал, үр дагавар, өртөлт ямар вэ?</td><td>FoS-ыг эрсдэлтэй адилтгах</td></tr>
+   <tr><th>5. Decision</th><td>Ямар хувилбар, эзэн, хугацаа байна вэ?</td><td>Ерөнхий, хэрэгжихгүй зөвлөмж</td></tr>
+   <tr><th>6. Action</th><td>Хяналтын арга хэмжээ бодитоор хэрэгжсэн үү?</td><td>Зураг төслийн санаа ≠ бодит гүйцэтгэл</td></tr>
+   <tr><th>7. Verification</th><td>Мониторинг юу харуулж, хэзээ дахин хянах вэ?</td><td>Шийдвэрийн дараах хяналтгүй болох</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>Долоо дахь шатны баталгаажуулалт нь мөчлөгийг нэгдүгээр шат руу буцаах хаалттай хүрээг бүрдүүлнэ. «Өгөгдөл өөрөө шийдвэр биш. Өгөгдөл нь эх үүсвэр, чанар, орон зай, хугацаа, механизмын тайлбартай холбогдож байж шийдвэрийн нотолгоо болно.»</p>
+ <h4>1.7.1 Өгөгдлийн чанарын DRIVE цикл</h4>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.7.</b> DRIVE — өгөгдлөөс нотолгоо боловсруулах алхам</caption>
+  <thead><tr><th>DRIVE</th><th>Үйлдэл</th></tr></thead>
+  <tbody>
+   <tr><th>D — Data</th><td>Өгөгдлийн эх үүсвэр, нэгж, байршил, хугацаа, чанарын тэмдэглэгээг шалгах</td></tr>
+   <tr><th>R — Record</th><td>Шийдвэрийн өмнөх өгөгдөл, хувилбар, таамаглал, зөвшөөрлийг мөрдөхүйц бүртгэх</td></tr>
+   <tr><th>I — Invest</th><td>Шийдвэрт хамгийн их нөлөөлөх нотолгооны хийдэлд судалгааны нөөц зарцуулах</td></tr>
+   <tr><th>V — Verify</th><td>Өөр өгөгдөл, гар тооцоо, ажиглалт, мониторингоор шалгах</td></tr>
+   <tr><th>E — Explain</th><td>Дүгнэлт, нотолгоо, тодорхойгүй байдал, үйлдэл, эзэн, баталгаажуулалтыг товч тайлбарлах</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>Шийдвэрийн өгүүлбэрийн загвар: «[Дүгнэлт]. Үүнийг [нотолгоо] дэмжиж байна. Гэхдээ [тодорхойгүй байдал / өөр тайлбар] шийдэгдээгүй. Иймээс [үйлдэл]-г [эзэн] [хугацаа]-д хэрэгжүүлж, [үзүүлэлт]-ээр [дахин хянах хугацаа]-д шалгана. Үлдэх эрсдэл: [үлдэх эрсдэл].» Энэ загварыг та <a href="#s11">С.11</a>-д семинарын шийдвэр бичихдээ шууд ашиглана.</p>
+</section>
+<section class="col" id="l8">
+ <h3><span class="no">1.8</span>Түгээмэл ташаа ойлголт</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт 1.8.</b> Түгээмэл ташаа ойлголт ба засах асуулт</caption>
+  <thead><tr><th>Ташаа ойлголт</th><th>Багшийн засах асуулт</th></tr></thead>
+  <tbody>
+   <tr><th>«FoS 1-ээс их бол аюулгүй»</th><td>Ямар механизм, нөхцөл, ус, геометр, тодорхойгүй байдал, үр дагаварт энэ FoS хамаарч байна вэ?</td></tr>
+   <tr><th>«Мониторинг өсөлт харуулсан тул эвдрэл заавал болно»</th><td>Хэрэгслийн төлөв, эталон цэгийн тогтвортой байдал, шуугиан, орон зайн уялдаа, өөр шалтгааныг шалгасан уу?</td></tr>
+   <tr><th>«Хамгийн нарийн программ хамгийн зөв»</th><td>Тухайн механизм, өгөгдлийн чанар, масштаб, тохируулгад загварын хэлбэр тохирч байна уу?</td></tr>
+   <tr><th>«Геотехникийн инженер л бүх шийдвэрийг гаргана»</th><td>Өгөгдлийн эзэн, техникийн эрх мэдэл, үйлдвэрлэлийн шийдвэрийн эзэн, дахин орох зөвшөөрлийн эзэн хэн бэ?</td></tr>
+   <tr><th>«Өгөгдөл олон байвал uncertainty багасна»</th><td>Өгөгдөл зөв байршил, хугацаа, нэгж, механизмтай холбоотой юу?</td></tr>
+   <tr><th>«Эрсдэл = FoS»</th><td>Магадлал, үр дагавар, өртөлт, хяналтын үр дүнтэй байдал хаана байна вэ?</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="l9">
+ <h3><span class="no">1.9</span>Өөрийгөө шалгах</h3>
+ <p>Асуулт бүрт эхлээд өөрөө хариулж, дараа нь хариуны чиглэлийг нээж харьцуул.</p>
+ <ol class="qlist">
+  <li>Уурхайн хажууг яагаад «инженерийн систем» гэж нэрлэдэг вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Геологи, чулуулгийн массив, ус, геометр, тэсэлгээ, мониторинг, эрсдэл харилцан нөлөөлж, амьдралын мөчлөгт өөрчлөгддөг тул.</div></details></li>
+  <li>Норм хүчдэл ба шүргэх хүчдэл яагаад эсрэг үүрэгтэй вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Норм хүчдэл гадаргууг хавчиж эсэргүүцлийг үүсгэдэг тул тогтворжилтод эерэг; шүргэх хүчдэл гулсалтыг үүсгэдэг тул сөрөг.</div></details></li>
+  <li>Усны түвшин 1 м-ээр өсөхөд FoS яагаад буурдаг вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Терцагийн зарчмаар нүх сүвний усны даралт үр дүнтэй норм хүчдэлийг бууруулж, боломжит эсэргүүцлийг багасгадаг тул.</div></details></li>
+  <li>Хавтгай ба дугуй гулсалтын кинематик нөхцөл юугаараа ялгаатай вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Хавтгай гулсалт нэг тодорхой тасралтын чиглэлд хамааралтай; дугуй гулсалт тасралтын нөлөө нэгэн төрлөвшсөн, чиглэлээс сул хамаарах массивт тохиолддог.</div></details></li>
+  <li>«FoS = 1,3» гэсэн бичвэрийг яагаад мэргэжлийн бус гэж үзэх вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Механизм, бат бөхийн эх сурвалж, усны төлөв, геометрийн нөхцөл дурдагдаагүй тул.</div></details></li>
+  <li>PoF ба FoS-ийн харилцаа ямар вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>PoF нь FoS-ын тархалт дахь FoS &lt; 1 болох магадлал; FoS нэг цэгийн харьцаа, тархалтыг агуулдаггүй.</div></details></li>
+  <li>Найдвартай байдлын индекс β юуг илэрхийлдэг вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Дундаж FoS хязгаарын төлөвөөс (1) хэдэн стандарт хазайлтаар хол байгааг хэмждэг үзүүлэлт.</div></details></li>
+  <li>Ижил FoS-той хоёр сектор яагаад өөр шийдвэр шаардаж болох вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Тодорхойгүй байдал (σ<sub>FoS</sub>), өртөлт, мониторингийн нотолгоо, загварын баталгаажуулалт өөр байж болно.</div></details></li>
+  <li>Эрсдэлийн тэгшитгэлд яагаад L, C, E, K дөрвийг хамт бичдэг вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>Магадлал ганцаараа хохирлыг, хохирол ганцаараа магадлалыг илэрхийлдэггүй; өртөлт ба хяналтгүйгээр эрсдэл бүрэн тодорхойлогдохгүй.</div></details></li>
+  <li>Өгөгдлөөс шийдвэр хүртэлх долоон шатны аль нь мөчлөгийг хаадаг вэ?
+   <details class="answer"><summary>Хариуны чиглэл</summary><div>7. Verification — мониторингийн үр дүн 1-р шат (Data) руу буцаж, загварыг дахин шалгах хаалттай хүрээг бүрдүүлдэг.</div></details></li>
+ </ol>
+</section>
+<section class="col" id="l10">
+ <h3><span class="no">1.10</span>Бүлгийн дүгнэлт</h3>
+ <p>Уурхайн хажуугийн тогтворжилт бол зөвхөн аюулгүйн коэффициент тооцох ажил биш, олон дэд систем, олон мэргэжлийн өгөгдлийг нэгтгэн үйлдвэрлэлийн шийдвэрийн нотолгоо болгох инженерийн систем юм. Норм ба шүргэх хүчдэл, үр дүнтэй хүчдэлийн зарчим, Мор–Кулоны шалгуур нь боломжит гулсалтын гадаргуу дээрх эсэргүүцлийг тодорхойлох физик үндэс; эвдрэлийн механизмын ангилал нь аль загвар, ямар өгөгдөл хэрэгтэйг тодорхойлдог эхний бөгөөд хамгийн шийдвэрлэх алхам.</p>
+ <p>Хамгийн чухал практик зарчим бол FoS, PoF, эрсдэлийг тус тусад нь ойлгож, нэгийг нөгөөгөөр орлохгүй байх явдал. Ижил FoS-той хоёр сектор тодорхойгүй байдал, өртөлт, мониторингийн нотолгооны ялгаагаас болж тэс өөр шийдвэр шаардаж болно. Өгөгдлөөс шийдвэр хүртэлх долоон шаттай мөчлөг, DRIVE цикл нь энэ нэгтгэлийг мөрдөхүйц болгодог хэрэгсэл. Лекц 2-т эдгээр зарчмыг өгөгдлийн систем, чанарын аудит руу шилжүүлж, ирэх долоо хоногуудад геологи, чулуулгийн массив, ус, геометрийн өгөгдлийг нэг нэгээр нь гүнзгийрүүлнэ.</p>
+</section>
+<section id="part2" class="part-opener">
+ <p class="roman" aria-hidden="true">II</p>
+ <h2>Семинар. Баруун секторын өгөгдөл–нотолгоо–шийдвэрийн зураглал</h2>
+ <p>90 минут. 12 мөр өгөгдөл, таван эх сурвалж, нэг hold point. Мөр бүрийг эх сурвалжтай нь хөтөлж, дүгнэлт бүрийг хязгаарлалттай нь хамгаална. Өгөгдлийн багц CME314-SYN-W01-v1.0 <span class="tag">I</span></p>
+</section>
+<section class="col" id="s1">
+ <h3><span class="no">С.1</span>Семинарын хүрээ</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.1.</b> Семинарын хүрээ ба хил</caption>
+  <tbody>
+   <tr><th>Кейс</th><td>C.ME314 Synthetic Open-Pit Mine — <span class="tag">I</span> сургалтын синтетик өгөгдөл, талбайн өгөгдөл биш.</td></tr>
+   <tr><th>Мэргэжлийн дүр</th><td>Оюутны баг — уурхайн геотехникийн өгөгдөл-шинжилгээний баг; шийдвэрийн эзэн — Geotechnical Superintendent (сургалтын дүр).</td></tr>
+   <tr><th>Шийдвэрийн асуулт</th><td>Баруун секторын дараагийн 24 цагийн зураглал ба өгөгдөл баталгаажуулах ажлыг үргэлжлүүлэх үү, хяналттай үргэлжлүүлэх үү, эсвэл hold point тогтоох уу?</td></tr>
+   <tr><th>Хамрах хүрээ</th><td>Геологи, бүтэц, өрөмдлөг, маркшейдер, ус, цаг агаар, үйлдвэрлэл, үзлэгийн 12 мөр өгөгдлийн нотолгооны чанар ба шийдвэрт хамаарах байдал.</td></tr>
+   <tr><th>Хил</th><td>Энэ семинар FoS тооцохгүй, программын гаралт зохиохгүй. Энэ кейсийн тоо, эрсдэлийн өнгийг бодит уурхайд шууд хэрэглэхгүй.</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="s2">
+ <h3><span class="no">С.2</span>Сэргээн санах асуулт ба семинарын зорилт</h3>
+ <p>Семинарын эхний найман минутад дараах гурван асуултад амаар хариулна.</p>
+ <ol class="qlist">
+  <li>Data ба evidence юугаараа ялгаатай вэ?
+   <details class="answer"><summary>Хариу</summary><div>Data бол бүртгэл; evidence бол QA/QC, context, relevance, provenance-оор шийдвэрийн асуултыг дэмжих хэмжээнд тайлбарлагдсан өгөгдөл.</div></details></li>
+  <li>FoS нэг утга байхад шууд шийдвэр гаргаж болох уу?
+   <details class="answer"><summary>Хариу</summary><div>Үгүй. Механизм, ус, геометр, өгөгдлийн чанар, тодорхойгүй байдал, үр дагавар, хяналт хамт шаардлагатай (Лекц 1.4–1.5).</div></details></li>
+  <li>Өгөгдлийн эзэн ба шийдвэрийн эзэн ижил үү?
+   <details class="answer"><summary>Хариу</summary><div>Үгүй. Data owner өгөгдлийн бүрэн бүтэн байдлыг; decision owner үйлдвэрлэлийн шийдвэр, эскалацийг хариуцна.</div></details></li>
+ </ol>
+ <h4>Семинарын зорилт</h4>
+ <ol>
+  <li>Өгөгдлийн мөр бүрт эх сурвалж, нэгж, эзэн, хугацаа, хувилбар, QA/QC төлөвийг 100 % бүртгэнэ.</li>
+  <li>Өгөгдөл → нотолгоо → боломжит механизм → шийдвэр гэсэн зураглалд дор хаяж 8 зөв холбоос байгуулна.</li>
+  <li>Шийдвэрт хамгийн их нөлөөлөх өгөгдлийн цоорхойг эрэмбэлж, нэг hold point санал болгоно.</li>
+  <li>Үйлдвэрлэлийн нэг шийдвэр, мониторингийн үйлдэл, шийдвэрийн эзнийг 3 минутын хамгаалалтаар тайлбарлана.</li>
+ </ol>
+</section>
+<section class="col" id="s3">
+ <h3><span class="no">С.3</span>90 минутын зураглал</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.2.</b> Семинарын цагийн хуваарь</caption>
+  <thead><tr><th class="num">Минут</th><th>Үйл ажиллагаа</th><th>Гаралт</th></tr></thead>
+  <tbody>
+   <tr><td class="num">0–8</td><td>Сэргээн санах</td><td>3 хариу</td></tr>
+   <tr><td class="num">8–15</td><td>Сценар, эх сурвалжийн шошго, хориг тайлбарлах</td><td>Дүрийн карт</td></tr>
+   <tr><td class="num">15–28</td><td>Dataset ба data dictionary, QA/QC демо</td><td>Excel 01_Raw + 03_QA</td></tr>
+   <tr><td class="num">28–43</td><td>Бүлгүүд 12 мөрийг flag хийж, criticality онооно</td><td>QA/QC бүртгэл</td></tr>
+   <tr><td class="num">43–58</td><td>Data–evidence–decision зураглал байгуулах</td><td>Decision map</td></tr>
+   <tr><td class="num">58–70</td><td>Механизм, тодорхойгүй байдал, хязгаарлалт challenge</td><td>Evidence statement</td></tr>
+   <tr><td class="num">70–82</td><td>3 хувилбар боловсруулж эзэн, мониторинг холбох</td><td>Decision record</td></tr>
+   <tr><td class="num">82–88</td><td>3 минутын хамгаалалт + эсрэг асуулт</td><td>Хамгаалалт</td></tr>
+   <tr><td class="num">88–90</td><td>Гарах тасалбар ба Семинар 2 руу гүүр</td><td>3 өгүүлбэр</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="s4">
+ <h3><span class="no">С.4</span>Оролтын өгөгдөл: геологи, бүтэц, өрөмдлөг</h3>
+ <p>Бүх мөр <span class="tag">I</span> — сургалтын синтетик өгөгдөл, талбайн өгөгдөл биш. Timestamp нь 2026-09-01Txx:xx+08:00 хэлбэртэй сургалтын огноо. QA/QC статусыг оюутан өөрөө тогтооно; «Raw» гэдэг нь «verified» гэсэн үг биш.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.3.</b> Геологи, бүтэц, өрөмдлөгийн бүртгэл, dataset CME314-SYN-W01-v1.0 <span class="tag">I</span></caption>
+  <thead><tr><th>ID</th><th>Эх сурвалж</th><th>Талбар</th><th>Утга</th><th>Нэгж</th><th>Эзэн</th><th>Хугацаа</th><th>Төлөв</th><th>Тэмдэглэл</th></tr></thead>
+  <tbody>
+   <tr><th>D01</th><td>Geology mapping</td><td>Lithology</td><td>Granodiorite</td><td>текст</td><td>EG-01</td><td>09-01 08:10</td><td>Raw</td><td>1050–1070 mRL нүүр</td></tr>
+   <tr><th>D02</th><td>Geology mapping</td><td>Weathering_grade</td><td>III</td><td>ангилал</td><td>EG-01</td><td>09-01 08:10</td><td>Raw</td><td>Масштаб бичигдээгүй</td></tr>
+   <tr><th>D03</th><td>Face mapping</td><td>Joint_set_J1</td><td>052/64</td><td>dip dir/dip °</td><td>EG-01</td><td>09-01 08:22</td><td>Raw</td><td>12 хэмжилт; конвенц заасан</td></tr>
+   <tr class="focus"><th>D04</th><td>Borehole log</td><td>RQD</td><td>68</td><td>%</td><td>LOG-02</td><td>08-31 16:40</td><td>Raw</td><td>1042–1052 mRL; гарцын талбар дутуу</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>D01–D04 нь геологи, бүтцийн эхний давхарга бөгөөд бүгд «Raw» төлөвтэй — өөрөөр хэлбэл нэг ч мөр QA/QC хараахан баталгаажаагүй. D03-ын 12 хэмжилт нь стереонэтийн бүлэглэл гаргахад дэндүү цөөн бөгөөд <a href="#r4">Дасгал 3</a>-т үүнийг өөрийн гараар харна.</p>
+</section>
+<section class="col" id="s5">
+ <h3><span class="no">С.5</span>Оролтын өгөгдөл: маркшейдер, ус, цаг агаар, үйлдвэрлэл</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.4.</b> Маркшейдер, ус, цаг агаар, үйлдвэрлэлийн бүртгэл <span class="tag">I</span></caption>
+  <thead><tr><th>ID</th><th>Эх сурвалж</th><th>Талбар</th><th>Утга</th><th>Нэгж</th><th>Эзэн</th><th>Хугацаа</th><th>Төлөв</th><th>Тэмдэглэл</th></tr></thead>
+  <tbody>
+   <tr><th>D05</th><td>Survey</td><td>Crest_E</td><td class="num">493 250,2</td><td>м</td><td>SV-01</td><td>09-01 07:30</td><td>Checked</td><td>Координатын систем бичигдээгүй</td></tr>
+   <tr><th>D06</th><td>Survey</td><td>Crest_N</td><td class="num">5 278 140,8</td><td>м</td><td>SV-01</td><td>09-01 07:30</td><td>Checked</td><td>Координатын систем бичигдээгүй</td></tr>
+   <tr><th>D07</th><td>Survey</td><td>Crest_RL</td><td class="num">1 120,4</td><td>mRL</td><td>SV-01</td><td>09-01 07:30</td><td>Checked</td><td>Тулгуур цэг BM-W01</td></tr>
+   <tr><th>D08</th><td>Piezometer</td><td>Water_level</td><td class="num">1 078,6</td><td>mRL</td><td>MON-01</td><td>09-01 06:00</td><td>Raw</td><td>Датумын холбоос хүлээгдэж байна</td></tr>
+   <tr><th>D09</th><td>Weather station</td><td>Rain_24h</td><td class="num">18,0</td><td>мм/24ц</td><td>ENV-01</td><td>09-01 06:00</td><td>Checked</td><td>10 минутын бичлэг дутуугүй</td></tr>
+   <tr><th>D10</th><td>Shift plan</td><td>Ramp_exposure</td><td>Active haul route</td><td>ангилал</td><td>OPS-01</td><td>09-01 05:45</td><td>Approved</td><td>18:00 хүртэл хүчинтэй</td></tr>
+   <tr><th>D11</th><td>Blast plan</td><td>Blast_time</td><td>09-01 14:00</td><td>datetime</td><td>DRB-01</td><td>08-31 18:00</td><td>Approved</td><td>Ирмэгээс зайн эцсийн утга өгөөгүй</td></tr>
+   <tr class="focus"><th>D12</th><td>Inspection note</td><td>Loose_blocks</td><td>Berm B3-т ажиглагдсан</td><td>текст</td><td>GEO-02</td><td>09-01 07:55</td><td>Raw</td><td>Зураг, масштаб, яг байршилгүй</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <figure>
+ <div class="plate"><svg viewBox="0 0 660 265" role="img" aria-label="Нотолгооны бэлэн байдлын оноо"><line x1="70" y1="230.0" x2="630" y2="230.0" class="s-hair"/><line x1="70" y1="230.0" x2="630" y2="230.0" class="s-hair"/><text x="62" y="234.0" text-anchor="end" font-size="11" class="f-ink2">0.00</text><line x1="70" y1="182.5" x2="630" y2="182.5" class="s-hair"/><text x="62" y="186.5" text-anchor="end" font-size="11" class="f-ink2">0.25</text><line x1="70" y1="135.0" x2="630" y2="135.0" class="s-hair"/><text x="62" y="139.0" text-anchor="end" font-size="11" class="f-ink2">0.50</text><line x1="70" y1="87.5" x2="630" y2="87.5" class="s-hair"/><text x="62" y="91.5" text-anchor="end" font-size="11" class="f-ink2">0.75</text><line x1="70" y1="40.0" x2="630" y2="40.0" class="s-hair"/><text x="62" y="44.0" text-anchor="end" font-size="11" class="f-ink2">1.00</text><rect x="100.0" y="173.0" width="34" height="57.0" class="f-mid"/><text x="117.0" y="167.0" text-anchor="middle" font-size="11" class="f-ink">0.30</text><text x="117.0" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D01</text><rect x="144.2" y="178.7" width="34" height="51.3" class="f-mid"/><text x="161.2" y="172.7" text-anchor="middle" font-size="11" class="f-ink">0.27</text><text x="161.2" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D02</text><rect x="188.4" y="173.0" width="34" height="57.0" class="f-mid"/><text x="205.4" y="167.0" text-anchor="middle" font-size="11" class="f-ink">0.30</text><text x="205.4" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D03</text><rect x="232.5" y="178.7" width="34" height="51.3" class="f-mid"/><text x="249.5" y="172.7" text-anchor="middle" font-size="11" class="f-ink">0.27</text><text x="249.5" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D04</text><rect x="276.7" y="110.3" width="34" height="119.7" class="f-mid"/><text x="293.7" y="104.3" text-anchor="middle" font-size="11" class="f-ink">0.63</text><text x="293.7" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D05</text><rect x="320.9" y="110.3" width="34" height="119.7" class="f-mid"/><text x="337.9" y="104.3" text-anchor="middle" font-size="11" class="f-ink">0.63</text><text x="337.9" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D06</text><rect x="365.1" y="97.0" width="34" height="133.0" class="f-mid"/><text x="382.1" y="91.0" text-anchor="middle" font-size="11" class="f-ink">0.70</text><text x="382.1" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D07</text><rect x="409.3" y="161.6" width="34" height="68.4" class="f-mid"/><text x="426.3" y="155.6" text-anchor="middle" font-size="11" class="f-ink">0.36</text><text x="426.3" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D08</text><rect x="453.5" y="130.2" width="34" height="99.8" class="f-mid"/><text x="470.5" y="124.2" text-anchor="middle" font-size="11" class="f-ink">0.53</text><text x="470.5" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D09</text><rect x="497.6" y="40.0" width="34" height="190.0" class="f-ink"/><text x="514.6" y="34.0" text-anchor="middle" font-size="11" class="f-ink">1.00</text><text x="514.6" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D10</text><rect x="541.8" y="101.8" width="34" height="128.2" class="f-mid"/><text x="558.8" y="95.8" text-anchor="middle" font-size="11" class="f-ink">0.68</text><text x="558.8" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D11</text><rect x="586.0" y="190.1" width="34" height="39.9" class="f-paper s-ink" stroke-dasharray="4 3" stroke-width="1.3"/><text x="603.0" y="184.1" text-anchor="middle" font-size="11" class="f-ink">0.21</text><text x="603.0" y="246.0" text-anchor="middle" font-size="12" class="f-ink">D12</text><text x="62" y="26" text-anchor="end" font-size="11" class="f-ink2">Score</text></svg></div>
+ <figcaption><b>Зураг С.1.</b> 12 мөрийн нотолгооны бэлэн байдлын оноо (§С.7, томьёо: бүрэн байдал × QA жин × хамаарлын жин). D10 (Approved, өндөр хамаарал) хамгийн өндөр, D12 (Raw, дутуу метадата, тасархай хүрээтэй багана) хамгийн бага. Энэ оноо эрсдэл, FoS, PoF биш — зөвхөн шийдвэрт ашиглах бэлэн байдлын дараалал. <span class="tag">I</span></figcaption>
+</figure>
+</section>
+<section class="col" id="s6">
+ <h3><span class="no">С.6</span>Өгөгдлийн толь ба QA/QC дүрэм</h3>
+ <p>Тооцоо эхлэхээс өмнө талбар бүр ямар нэгжтэй, ямар дүрмээр шалгагдахыг нэг хүснэгтэд тогтооно. Энэ хүснэгт бол дараагийн хүн таны тооцоог давтах боломжийн баталгаа.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.5.</b> Өгөгдлийн толь ба provenance гэрээ</caption>
+  <thead><tr><th>Талбар</th><th>Тодорхойлолт, төрөл</th><th>QA/QC дүрэм</th></tr></thead>
+  <tbody>
+   <tr><th><code>Data_ID</code></th><td>Тогтвортой ID; текст; D##</td><td>COUNTIF = 1, давхардаагүй</td></tr>
+   <tr><th><code>Source_ID</code></th><td>Эх файлын ID; хоосон биш</td><td>Хоосон бол FAIL</td></tr>
+   <tr><th><code>Source_type</code></th><td>Mapping, survey, sensor, plan, note</td><td>Хяналттай жагсаалт</td></tr>
+   <tr><th><code>Unit</code></th><td>SI нэгж эсвэл тодорхой формат</td><td>Хоосон/тодорхойгүй бол FAIL</td></tr>
+   <tr><th><code>Owner</code></th><td>Data steward-ийн role ID, хүний нэр биш</td><td>Хоосон бол FAIL</td></tr>
+   <tr><th><code>Timestamp</code></th><td>ISO 8601 + цагийн бүсийн offset</td><td>Ирээдүйн/хуучирсан огноо шалгалт</td></tr>
+   <tr><th><code>QA_QC_Status</code></th><td>Raw / Checked / Approved / Rejected</td><td>Raw ≠ decision-ready</td></tr>
+   <tr><th><code>Evidence_Label</code></th><td>E/I/S/U</td><td>U claim шийдвэрийн үндэс болохгүй</td></tr>
+   <tr><th><code>Limitation</code></th><td>Хамрах хүрээ, масштаб, датум, баталгаажуулалтын цоорхой</td><td>Шийдвэрт хамаарах эсэхийг заавал бичих</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p><strong>Provenance-ийн доод хязгаар:</strong> хэн/role → ямар багаж/эх сурвалж → байршил/координатын систем → хугацаа/цагийн бүс → нэгж → хувиргалт → хувилбар → QA/QC хянагч → хэрэглэх боломж/хязгаарлалт. Нэг холбоос дутвал өгөгдлийг устгахгүй; төлөвийг ил тод бууруулж, судалгааны үйлдэл нээнэ.</p>
+</section>
+<section class="col" id="s7">
+ <h3><span class="no">С.7</span>Excel тооцоо: алхам, томьёо, үр дүн</h3>
+ <p>Хүснэгт С.3–С.4-ийг Excel-д шилжүүлж, нэрлэсэн муж ашиглан доорх найман томьёог оруулна. Томьёо бүрийн үр дүнг D12 мөрөөр шалгана.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.6.</b> Excel томьёо ба D12-ын шалгах утга</caption>
+  <thead><tr><th>Алхам</th><th>Томьёо</th><th>Жишээ үр дүн</th></tr></thead>
+  <tbody>
+   <tr><th>1. Давхардал</th><td><span class="xl">=IF(COUNTIF($A:$A,A2)&gt;1,"DUPLICATE","OK")</span></td><td>D01–D12 бүгд OK</td></tr>
+   <tr><th>2. Бүрэн байдал</th><td><span class="xl">=IF(COUNTA(A2:J2)&lt;10,"MISSING","OK")</span></td><td>D12: гэрэл зураг, масштаб талбар хоосон → MISSING flag</td></tr>
+   <tr><th>3. Нэгж</th><td><span class="xl">=IF(COUNTIFS(Dict!$A:$A,D2,Dict!$B:$B,F2)=0,"UNIT_CHECK","OK")</span></td><td>Бүх мөр OK</td></tr>
+   <tr><th>4. Timestamp</th><td><span class="xl">=IFERROR(IF(H2&gt;NOW(),"FUTURE","OK"),"TIME_FORMAT")</span></td><td>D12: OK</td></tr>
+   <tr><th>5. Хуучирал (цаг)</th><td><span class="xl">=24*($K$1-H2)</span></td><td>Шийдвэрийн цагаас хамаарна</td></tr>
+   <tr><th>6. Статус</th><td><span class="xl">=IF(I2="Approved","READY",IF(I2="Checked","REVIEW","HOLD"))</span></td><td>D12: Raw → HOLD</td></tr>
+   <tr><th>7. Бэлэн байдлын оноо</th><td><span class="xl">=Completeness*QA_weight*Relevance_weight</span></td><td>D12 = 0,70 × 0,40 × 0,75 = <strong>0,21</strong></td></tr>
+   <tr><th>8. Ерөнхий flag</th><td><span class="xl">=IF(OR(K2="DUPLICATE",L2="MISSING",M2="UNIT_CHECK",O2="HOLD"),"RED",IF(O2="REVIEW","AMBER","GREEN"))</span></td><td>D12: RED (MISSING ба HOLD хоёулаа)</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p><strong>Тооцооны үр дүн (Python-оор баталгаажуулсан).</strong> Бүрэн байдал × QA жин (Raw=0,4; Checked=0,7; Approved=1,0) × хамаарлын жин (бага=0,5; дунд=0,75; өндөр=1,0) томьёогоор 12 мөрийн бэлэн байдлын оноо 0,21-ээс 1,00 хооронд хэлбэлзэв (Зураг С.1). D10 (Approved, өндөр хамаарал, бүрэн) = 1,00; D12 (Raw, дунд хамаарал, 70 % бүрэн) = 0,21. Энэ оноо эрсдэл, FoS, PoF биш, зөвхөн сургалтын эрэмбийн оноо. <span class="tag">I</span></p>
+ <div class="note">
+  <span class="h">Анхааруулга</span>
+  <p>RED/AMBER/GREEN бол сургалтын QA статус, универсал TARP триггер биш. «Оноо 0,21» гэдэг нь эвдрэх магадлал биш; өгөгдлийн цоорхойг шийдвэрийн нөлөөгөөр эрэмбэлэх орон нутгийн оноо юм.</p>
+ </div>
+</section>
+<section class="col" id="s8">
+ <h3><span class="no">С.8</span>Өгөгдөл–нотолгоо–шийдвэрийн зураглал, механизмын хамаарал</h3>
+ <figure>
+ <div class="plate"><svg viewBox="0 0 620 230" role="img" aria-label="Data-evidence-decision ажлын урсгал">
+  <defs><marker id="sar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker></defs>
+  <rect x="10" y="90" width="120" height="50" class="f-paper s-ink" stroke-width="1.2"/><text x="70" y="112" text-anchor="middle" font-size="12.5" font-weight="600" class="f-ink">Data</text><text x="70" y="128" text-anchor="middle" font-size="11" class="f-ink2">D01–D12</text>
+  <path d="M130,115 L182,115" class="s-ink" stroke-width="1.1" marker-end="url(#sar)"/>
+  <rect x="184" y="90" width="120" height="50" class="f-paper s-ink" stroke-width="1.2"/><text x="244" y="112" text-anchor="middle" font-size="12.5" font-weight="600" class="f-ink">Evidence</text><text x="244" y="128" text-anchor="middle" font-size="11" class="f-ink2">QA/QC, label, gap</text>
+  <path d="M304,115 L356,115" class="s-ink" stroke-width="1.1" marker-end="url(#sar)"/>
+  <rect x="358" y="90" width="130" height="50" class="f-paper s-ink" stroke-width="1.2"/><text x="423" y="112" text-anchor="middle" font-size="12.5" font-weight="600" class="f-ink">Механизм</text><text x="423" y="128" text-anchor="middle" font-size="11" class="f-ink2">plausible / unsupported</text>
+  <path d="M488,115 L544,115" class="s-ink" stroke-width="1.1" marker-end="url(#sar)"/>
+  <rect x="500" y="20" width="110" height="46" class="f-ink s-ink" stroke-width="1.2"/><text x="555" y="40" text-anchor="middle" font-size="12.5" class="f-paper" font-weight="600">Шийдвэр</text><text x="555" y="56" text-anchor="middle" font-size="10.5" class="f-paper">O1/O2/O3</text>
+  <path d="M555,66 L555,88" class="s-ink" stroke-width="1.1" marker-end="url(#sar)"/>
+  <rect x="500" y="164" width="110" height="46" class="f-paper s-ink" stroke-width="1.2"/><text x="555" y="184" text-anchor="middle" font-size="12.5" font-weight="600" class="f-ink">Мониторинг</text><text x="555" y="200" text-anchor="middle" font-size="10.5" class="f-ink2">recovery evidence</text>
+  <path d="M555,164 L555,142" class="s-ink" stroke-width="1.1" marker-end="url(#sar)"/>
+  <path d="M500,187 C300,205 130,187 90,142" class="s-ink" stroke-width="1" stroke-dasharray="5 4" marker-end="url(#sar)"/>
+  <text x="290" y="216" text-anchor="middle" font-size="11" class="f-ink2" font-style="italic">буцах давталт — 1.7-гийн долоон шаттай мөчлөг</text>
+ </svg></div>
+ <figcaption><b>Зураг С.2.</b> Data–evidence–decision ажлын урсгал. Сум бүр causal claim биш, шалгах инженерийн холбоо. Мониторинг ажиглагдсан гүйцэтгэлийг өгөгдөл рүү буцаана (Лекц 1.7-той харьцуул). <span class="tag">I</span></figcaption>
+</figure>
+ <p><strong>Механизмын тухай мэдэгдэл.</strong> D12-ын Berm B3 дээрх сул блокийн ажиглалт нь орон нутгийн чулуу унал/сул блокийн боломжийг шалгах дохио өгнө. Гэхдээ хавтгай, шаантаг, дугуй, хөмрөх механизмын аль нэгийг батлахад бүтэц, үргэлжлэл, хажуугийн чиглэл, масштаб, ус, материалын нотолгоо хүрэлцэхгүй (Лекц 1.3). «Механизм тодорхойгүй» гэдэг нь «аюулгүй» гэсэн үг биш; «ажиглалт байна» гэдэг нь «эвдрэл ойрхон» гэсэн үг ч биш.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.7.</b> Data–evidence–decision зураглалын жишээ холбоос (дор хаяж 8-ыг бүлэг өөрөө нэмнэ)</caption>
+  <thead><tr><th>Холбоос</th><th>Нотолгоо</th><th>Хамаарал, хязгаарлалт</th></tr></thead>
+  <tbody>
+   <tr><th>D10 → Шийдвэр</th><td>Approved ramp exposure, 18:00 хүртэл хүчинтэй</td><td>Traceable, өндөр хамаарал; хугацааны хязгаартай</td></tr>
+   <tr><th>D09 → Механизм</th><td>Checked, 24 цагт 18 мм хур тунадас</td><td>Усны нөхцөлийн орон нутгийн нэмэлт дохио; ганцаараа механизм тогтоохгүй</td></tr>
+   <tr><th>D03 → Механизм</th><td>Raw, ганц ан цавын бүлэг, n=12</td><td>Чиглэлийн заалт байгаа ч дээж цөөн, бүлэглэл баталгаажаагүй <span class="tag">U</span></td></tr>
+   <tr class="focus"><th>D12 → Шийдвэр</th><td>Raw, зураг/масштаб/байршилгүй ажиглалт</td><td>Заавал шалгах индикатор; шийдвэрийн үндэс болохгүй</td></tr>
+   <tr><th>D08 → Механизм</th><td>Raw, датумын холбоос хүлээгдэж буй</td><td>Огтлолтой уялдуулах боломжгүй хүртэл ашиглахгүй</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="s9">
+ <h3><span class="no">С.9</span>Програмаас үл хамаарах шалгалтын жагсаалт</h3>
+ <p>Долоо хоног 1-д Dips/Slide2/RS2 гаралт үүсгэхгүй. Харин дараах интерфэйсийн гэрээг шалгана: чиглэлийн конвенц, координатын лавлагаа, өндрийн датум, нэгж, геометрийн хувилбар, усны хугацааны тэмдэг, материал/домэйны ID, шинжилгээний зорилго.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.8.</b> Программаас хараат бус тулгалт</caption>
+  <thead><tr><th>Шалгах зүйл</th><th>Оролтын нотолгоо</th><th>Тулгалтын асуулт</th><th>Долоо хоног 1-ийн үр дүн</th></tr></thead>
+  <tbody>
+   <tr><th>Чиглэл</th><td>D03</td><td>Dip/Dip Direction конвенц тодорхой юу?</td><td>Тийм; дээжийн хэмжээ бага, хамрах хүрээ хязгаарлагдмал</td></tr>
+   <tr><th>Геометр</th><td>D05–D07</td><td>Координатын систем ба тулгуур цэг хоёулаа байна уу?</td><td>Тулгуур цэг байгаа; координатын систем дутуу → HOLD</td></tr>
+   <tr><th>Ус</th><td>D08</td><td>Датум ба геометрийн хувилбар нэг лавлагаатай юу?</td><td>Датумын холбоос хүлээгдэж байгаа тул загварын оролт биш</td></tr>
+   <tr><th>Үйлдвэрлэл</th><td>D10–D11</td><td>Шийдвэрийн цонх, өртөлт, тэсэлгээний нөхцөл бүрэн үү?</td><td>Ramp exposure тодорхой; эцсийн ханын зай дутуу</td></tr>
+   <tr><th>Ажиглалт</th><td>D12</td><td>Байршил, зураг, масштаб, хянагч байна уу?</td><td>Дутуу → зөвхөн заалт, шийдвэрлэх нотолгоо биш</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p>Баталгаажсан программын гаралт байхгүй бол «одоогоор боломжгүй» гэж тэмдэглэж, зохиомол contour эсвэл FoS үүсгэхгүй. Rocscience-ийн тооцоог <a href="#part3">III хэсэгт</a> тусад нь, өөрийн нэр, огноо, файлын хувилбартайгаар хийж баримтжуулна.</p>
+</section>
+<section class="col" id="s10">
+ <h3><span class="no">С.10</span>Бүлгийн даалгавар</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.9.</b> Бүлгүүдийн үүрэг</caption>
+  <thead><tr><th>Даалгавар</th><th class="num">Мин</th><th>Агуулга</th></tr></thead>
+  <tbody>
+   <tr><th>A — QA/QC</th><td class="num">15</td><td>12 мөрийн provenance, нэгж, хугацаа, статус, байршлыг шалгаж GREEN/AMBER/RED өгнө. Мөр устгахгүй; татгалзсан үндэслэлээ хадгална.</td></tr>
+   <tr><th>B — Evidence map</th><td class="num">15</td><td>Зураг С.2 дээр дор хаяж 8 холбоос зурж, Data ID, evidence label, хамаарал, хязгаарлалт бичнэ. Causal холбоос нотлогдоогүй бол «association to test» гэж тэмдэглэнэ.</td></tr>
+   <tr><th>C — Decision options</th><td class="num">12</td><td>О1 (үргэлжлүүлэх), О2 (хяналттай үргэлжлүүлэх), О3 (hold/хязгаарлах) гурвын нэгийг сонгож, аюулгүй байдлын эгзэгтэй цоорхой, өгөгдлийн gap, эзэн, үйлдэл, мониторинг, сэргэлтийн нотолгоог бөглөнө.</td></tr>
+   <tr><th>D — 3 минутын хамгаалалт</th><td class="num">6</td><td>60 секунд evidence, 45 секунд механизм/тодорхойгүй байдал, 45 секунд шийдвэр/хяналт, 30 секунд мониторинг/эзэн. Нөгөө баг 1 эсрэг асуулт асууна.</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="s11">
+ <h3><span class="no">С.11</span>Инженерийн шийдвэр ба загвар хариу</h3>
+ <p>Эхлээд бүлгээрээ шийдвэрээ бичиж, дараа нь загвар хариутай харьцуул.</p>
+ <details class="answer"><summary>Загвар хариуг нээх</summary><div>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.10.</b> Шийдвэрийн бүртгэл, W01-v1.0 <span class="tag">I</span></caption>
+  <tbody>
+   <tr><th>Сонгосон хувилбар</th><td>О2 — хяналттай үргэлжлүүлэх; геометр, усны өгөгдлийг шинжилгээний оролт болгон ашиглахыг HOLD хийнэ.</td></tr>
+   <tr><th>Үндэслэл</th><td>D10 (Approved ramp exposure), D09 (Checked хур тунадас), D03 (чиглэлийн заалт байгаа ч дээж бага).</td></tr>
+   <tr><th>Эгзэгтэй цоорхой</th><td>Survey координатын систем дутуу (D05–D06); пьезометрийн датумын холбоос хүлээгдэж буй (D08); сул блокийн зураг/масштаб/байршил дутуу (D12); эцсийн ханын зай дутуу (D11).</td></tr>
+   <tr><th>Боломжит механизм</th><td>Орон нутгийн сул блок/чулуу унал боломжтой; хавтгай, шаантаг, дугуй механизмын аль нэгийг батлах боломжгүй.</td></tr>
+   <tr><th>Хяналтын арга хэмжээ</th><td>B3 орчмын нэвтрэлтийг хязгаарлах; байршил тэмдэглэсэн зураг, масштабтай давтан үзлэг; координатын систем баталгаажуулах; тэсэлгээний өмнөх, дараах үзлэг.</td></tr>
+   <tr><th>Мониторинг</th><td>Үзлэгийн бүртгэл, survey шалгалт, пьезометрийн датум тохируулга, тэсэлгээний нөхцөлийн бүртгэл.</td></tr>
+   <tr><th>Hold point</th><td>Геометр/усны өгөгдлийг шинжилгээнд ашиглахгүй, орон нутгийн хязгаарлалтыг эзэн засварласан метадатаг хүлээн авах хүртэл цуцлахгүй.</td></tr>
+   <tr><th>Шийдвэрийн эзэн</th><td>Geotechnical Superintendent; Operations Supervisor нэвтрэлтийн хяналтыг хэрэгжүүлнэ; өгөгдлийн эзэд бүртгэлээ засна.</td></tr>
+   <tr><th>Хязгаарлалт</th><td>Энэ сургалтын кейс универсал триггер, талбайн хүлээн авах шалгуур тогтоохгүй.</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p><strong>Нэгтгэл.</strong> Баруун секторын өгөгдөл бүхэлдээ нэг түвшний нотолгоо биш: D10, D09 traceable; D03 чиглэлийн заалттай ч дээж бага; D05–D07 тоон утгатай ч координатын лавлагаагүй; D08 логгер эрүүл ч датум холбоогүй; D12 байршил, масштабгүй. Иймээс geometry–water–observation-ийг нэг огтлолд шууд уялдуулах боломжгүй. Энэ бол «эвдрэл болно» гэсэн дүгнэлт биш, «геометр, усны өгөгдлийг одоохондоо шийдвэрт ашиглаж болохгүй» гэсэн хатуу мэдэгдэл.</p>
+ </div></details>
+</section>
+<section class="col" id="s12">
+ <h3><span class="no">С.12</span>Тодорхойгүй байдал, мониторинг, TARP руу гүүр</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.11.</b> Тодорхойгүй байдлыг бууруулах төлөвлөгөө</caption>
+  <thead><tr><th>Тодорхойгүй байдал</th><th>Арга хэмжээ, хариуцагч</th><th>Сэргэлтийн нотолгоо</th></tr></thead>
+  <tbody>
+   <tr><th>Бүтцийн дээж n=12, хамрах хүрээ нарийн</th><td>Зураглал өргөтгөх, EG-01</td><td>Семинар 6-ын кинематик нотолгоо</td></tr>
+   <tr><th>Координатын систем байхгүй</th><td>CRS баталгаажуулах, SV-01</td><td>Геометрийн шалгалтын триггер</td></tr>
+   <tr><th>Пьезометрийн датум хүлээгдэж буй</th><td>Датум тохируулга, MON-01</td><td>Семинар 9-ийн усны триггер</td></tr>
+   <tr><th>Сул блокийн тэмдэглэл дутуу</th><td>Давтан үзлэг, GEO-02</td><td>Семинар 13-ын мониторингийн нотолгоо</td></tr>
+   <tr><th>Тэсэлгээний зай дутуу</th><td>Тэсэлгээний нөхцөлийг гүйцээх, DRB-01</td><td>Семинар 11-ийн үйл явдалтай уялдсан шинжилгээ</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <p><strong>Trigger statement-ийн дүрэм.</strong> <em>Хэрэв</em> [ажиглагдсан нөхцөл + чанарын шалгуур + үргэлжлэх хугацаа/байршил] бол, <em>тэгвэл</em> [үйлдэл], <em>хариуцагч</em> [эрх бүхий эзэн], <em>хүртэл</em> [сэргэлтийн нотолгоо]. Энэ долоо хоногт тоон threshold тогтоохгүй — зөвхөн энэ грамматикийг сурна. TARP-ийн бодит хөдөлгөөн, тоон босго Лекц 15-д орно.</p>
+</section>
+<section class="col" id="s13">
+ <h3><span class="no">С.13</span>Үнэлгээний шалгуур, түгээмэл алдаа, гарах тасалбар</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.12.</b> Үнэлгээний шалгуур</caption>
+  <thead><tr><th>Шалгуур</th><th>2 оноо</th><th>1 оноо</th><th>0 оноо</th></tr></thead>
+  <tbody>
+   <tr><th>Provenance, QA/QC</th><td>Бүх мөр эх сурвалж/нэгж/эзэн/хугацаа/статустай; flag үндэслэлтэй</td><td>1–2 мөр дутуу</td><td>Traceability байхгүй</td></tr>
+   <tr><th>Evidence map</th><td>≥8 зөв холбоос, label, хязгаарлалттай</td><td>Холбоос байгаа ч label дутуу</td><td>Data-г шууд шийдвэр гэж үзсэн</td></tr>
+   <tr><th>Механизмын логик</th><td>Plausible/unsupported ялгасан, gap хэлсэн</td><td>Холбоос сул</td><td>Баталгаагүй механизм зарласан</td></tr>
+   <tr><th>Шийдвэр, хяналт</th><td>Хувилбар, эзэн, hold point, recovery evidence тодорхой</td><td>Эзэн/үйлдэл бүдэг</td><td>Шийдвэргүй эсвэл универсал threshold зохиосон</td></tr>
+   <tr><th>Харилцаа</th><td>3 минутад evidence–uncertainty–action–monitoring логик бүтэн</td><td>Хэсэгчлэн ойлгомжтой</td><td>Эх сурвалж, хязгаарлалт нуусан</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт С.13.</b> Алдаа ба түүнийг засах асуулт</caption>
+  <thead><tr><th>Алдаа</th><th>Засах асуулт</th></tr></thead>
+  <tbody>
+   <tr><td>Raw статусыг «баталгаажсан» гэж ойлгох</td><td>Ямар хянагч, ямар хүлээн авах шалгалт хийсэн бэ?</td></tr>
+   <tr><td>Тоон утга байгаа тул шийдвэрт бэлэн гэж үзэх</td><td>Алга болсон метадата шийдвэрт эгзэгтэй байж болох уу?</td></tr>
+   <tr><td>Сул блок = тодорхой эвдрэлийн механизм гэж зарлах</td><td>Чиглэл, үргэлжлэл, гарах гадаргуу, ус, масштабын нотолгоо хаана байна?</td></tr>
+   <tr><td>Өнгийн flag-ийг TARP threshold гэж хэрэглэх</td><td>Энэ өнгө QA юу, аюулын триггер юу? Эрх мэдэл хэн бэ?</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <div class="note">
+  <span class="h">Гарах тасалбар</span>
+  <p>Хамгийн эгзэгтэй өгөгдлийн цоорхой, түүнээс болж хийж болохгүй дүгнэлт, тэр цоорхойг хаах эзэн + үйлдэл + нотолгоог тус бүр нэг өгүүлбэрээр бич.</p>
+ </div>
+ <p><strong>Семинар 2 руу гүүр.</strong> CME314-SYN-W02-v1.1 өгөгдлийн багцад W01-ийн raw dataset хэвээр үлдэнэ; CRS_ID, chainage, домэйн, баталгаажуулах дүрэм, давхардлын бүлэг, хувиргалтын лог, шинэчилсэн хугацаа, хянагч, disposition талбар нэмэгдэнэ. Decision_Record_W01 хаагдахгүй; W02-ийн засвар бүр change log-той байна.</p>
+</section>
+<section id="part3" class="part-opener">
+ <p class="roman" aria-hidden="true">III</p>
+ <h2>Rocscience практикум. Лекцийн тоог програмаар шалгах бие даасан ажил</h2>
+ <p>Гурван дасгал нэг гинж үүсгэнэ: гар тооцооны FoS-ыг хязгаарын тэнцвэрийн аргаар давтах, тодорхойгүй байдлыг магадлалт шинжилгээгээр харах, цөөн бүтцийн өгөгдлийг стереонэтэд буулгаж хэр хангалттай эсэхийг мэдрэх. Дөрөв дэх дасгал сонголтот бөгөөд тэнцвэрийн ба тоон загварчлалын аргыг харьцуулна.</p>
+</section>
+<section class="col" id="r0">
+ <h3><span class="no">Р.0</span>Програмыг олж авах, суулгах, идэвхжүүлэх</h3>
+ <p>Rocscience-ийн суулгагчийг хэн ч татаж авч болох ч ажиллуулахад хүчинтэй лиценз заавал хэрэгтэй. Оюутанд гурван бодит зам бий.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт Р.1.</b> Лиценз авах зам</caption>
+  <thead><tr><th>Зам</th><th>Хэрхэн</th><th>Хэзээ тохиромжтой</th></tr></thead>
+  <tbody>
+   <tr><th>Тэнхимийн их сургуулийн лиценз</th><td>Тэнхим академик багц захиалсан бол багш, лаборант сүлжээний серверийн хаяг эсвэл хувийн боловсролын лицензийн код олгоно.</td><td>Улирлын турш, бүх дасгалд. Зөвлөмж болгох зам.</td></tr>
+   <tr><th>Туршилтын хувилбар</th><td>rocscience.com дээр тухайн програмын хуудаснаас Free Trial дарж, RocPortal бүртгэл үүсгэнэ. Туршилтын зорилгод Educational сонгоно.</td><td>Нэг удаагийн дасгал. Хугацаа хязгаартай тул бүх дасгалаа төлөвлөөд эхлүүл.</td></tr>
+   <tr><th>Сургуулийн компьютерийн лаборатори</th><td>Лаборант урьдчилан суулгасан машинд ажиллана.</td><td>Mac, Chromebook хэрэглэгч. Програмууд албан ёсоор зөвхөн Windows 10/11 (64-bit) дээр ажиллана.</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <ol class="steps">
+  <li><a href="https://www.rocscience.com/support/program-downloads">rocscience.com/support/program-downloads</a> хуудаснаас Slide2, Dips, RS2-ийн суулгагчийг татна.</li>
+  <li>Татсан <code>.exe</code> файлыг ажиллуулж суулгана. Windows-ийн администраторын эрх шаардагдаж болно.</li>
+  <li>Анх нээхэд лиценз идэвхжүүлэх цонх гарна. Тэнхимийн сүлжээний лиценз бол Network License сонгоод серверийн хаягийг, хувийн код эсвэл туршилтын хувилбар бол Standalone сонгоод кодоо оруулна.</li>
+  <li>Идэвхжсэний дараа програм нээгдэнэ. Сүлжээний лиценз сервертэй тогтмол холбогдож байх ёстойг анхаар.</li>
+ </ol>
+ <div class="note">
+  <span class="h">Анхааруулга</span>
+  <p>Интернетээс олдох «crack», torrent, «үнэгүй бүрэн хувилбар» хууль бус бөгөөд хортой програм агуулах өндөр эрсдэлтэй. Ийм файлыг хэзээ ч татахгүй, бусдад тараахгүй. Лицензийн нөхцөл, үнэ, туршилтын хугацаа өөрчлөгддөг тул хамгийн сүүлийн мэдээллийг зөвхөн rocscience.com-оос шалгана.</p>
+ </div>
+ <h4>Ажлын фолдер ба файлын нэр</h4>
+ <p>Rocscience-ийн програм бүр Help цэсэнд Tutorials буюу бэлэн жишээ файлтай ирдэг. Жишээ файл дээр шууд бүү ажилла: эхлээд <span class="menu">File → Save As</span> хийж өөрийн нэрээр хадгал. Энэ бүлгийн бүх файлыг нэг фолдерт хураа.</p>
+ <p><code>Овог_W01/</code> фолдер дотор <code>Овог_W01_Slide2_det</code>, <code>Овог_W01_Slide2_prob</code>, <code>Овог_W01_Dips</code>, <code>Овог_W01_RS2</code>, <code>Овог_W01_tailan.xlsx</code>. Файлын нэр ажлын урсгалыг өөрөө өгүүлнэ.</p>
+</section>
+<section class="col" id="r1">
+ <h3><span class="no">Р.1</span>Гурван програм, нэг асуулт</h3>
+ <p>Гурван програм тус бүр өөр асуултад хариулна. Бүлгийн гол санаа болох «FoS нэг тоо, тодорхойгүй байдал өөр давхарга, механизм гуравдугаар давхарга» гэдгийг эдгээрийг хослуулж байж харна.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт Р.2.</b> Програм, бүлгийн асуулт, оролт, гаралт</caption>
+  <thead><tr><th>Програм</th><th>Энэ бүлэгт хариулах асуулт</th><th>Бүлгээс авах оролт</th><th>Таны бүртгэх гаралт</th></tr></thead>
+  <tbody>
+   <tr><th>Slide2 (детерминист)</th><td>Хязгаарын тэнцвэрийн арга гар тооцоотой хэр тохирох вэ?</td><td>Жишээ 1.1-ийн c′, φ′, γ, β, ус (1.6)</td><td>Bishop/Janbu/Spencer-ийн FoS, ус нэмэхэд өөрчлөлт</td></tr>
+   <tr><th>Slide2 (магадлалт)</th><td>Оролтын тархалт FoS-ын найдвартай байдлыг хэрхэн өөрчлөх вэ?</td><td>σ<sub>FoS</sub>-ийн жишээ, Сектор A/B (1.10)</td><td>Найдвартай байдлын индекс, PoF-ийн чиг хандлага</td></tr>
+   <tr><th>Dips</th><td>Ганц ан цавын бүлгийн 12 хэмжилт кинематик дүгнэлт өгөхөд хангалттай юу?</td><td>D03-ийн 12 хэмжилт (С.4)</td><td>Туйлын тархалт, дээжийн хангалттай байдлын үнэлгээ</td></tr>
+   <tr><th>RS2 (сонголтот)</th><td>Хүчний тэнцвэр ба хүчдэлийн арга ижил асуултад ижил хариу өгдөг үү?</td><td>Жишээ 1.1-ийн геометр, материал</td><td>SRF-ийн чиг хандлага, LEM-тэй харьцуулалт</td></tr>
+  </tbody>
+ </table>
+ </div>
+ <div class="note">
+  <span class="h">Практикумын хил</span>
+  <p>Энд гарах бүх тоо <span class="tag">I</span> ангилалд хамаарна. Та програм эзэмших, мэдрэмжийг ажиглах, хязгаарлалтыг ойлгох зорилгоор тооцоолж байна. Эдгээр нь зураг төслийг хүлээн авах, татгалзах үндэслэл болохгүй.</p>
+ </div>
+</section>
+<section class="col" id="r2">
+ <h3><span class="no">Р.2</span>Дасгал 1. Slide2: гар тооцооны FoS-ыг хязгаарын тэнцвэрийн аргаар давтах</h3>
+ <div class="exercise">
+  <div class="ex-head"><span class="ex-no">Дасгал 1</span><span class="ex-title">Нэг блок, гурван арга</span><span class="ex-meta">50 минут. Лекц 1.4, 1.6</span></div>
+  <p><strong>Зорилго.</strong> Лекцийн Жишээ 1.1-ийн хавтгай гулсалтын блокийг Slide2-т сул давхаргатай огтлол болгон байгуулж, Bishop simplified, Spencer, GLE гурван аргаар FoS тооцож, гар тооцоотой (FoS = 1,35 хуурай, 1,07 устай) харьцуулна.</p>
+  <h5>Оролт <span class="tag">I</span></h5>
+  <div class="tbl">
+  <table>
+   <thead><tr><th>Параметр</th><th>Утга</th><th>Тайлбар</th></tr></thead>
+   <tbody>
+    <tr><th>Материал</th><td>Mohr–Coulomb</td><td>c′ = 25 кПа, φ′ = 32°, γ = 25 кН/м³ (Жишээ 1.1)</td></tr>
+    <tr><th>Сул давхарга</th><td>Унал 35°</td><td>Огтлолын дундуур тасалдалгүй үргэлжилнэ</td></tr>
+    <tr><th>Гулсалтын гадаргуугийн урт</th><td>≈ 100 м</td><td>A = 100 м² тул нэгж өргөнд урт ≈ талбай</td></tr>
+    <tr><th>Усны түвшин 1</th><td>Хуурай</td><td>u = 0 (лавлах хувилбар)</td></tr>
+    <tr><th>Усны түвшин 2</th><td>Гадаргуугаас доош тогтмол зайтай</td><td>Гулсалтын гадаргуу дээр дундаж u ≈ 30 кПа гарахаар байрлуулна</td></tr>
+   </tbody>
+  </table>
+  </div>
+  <h5>Алхам</h5>
+  <ol class="steps">
+   <li>Slide2-т шинэ файл нээж <span class="menu">Project Settings</span>-д метр, кПа нэгж, шинжилгээний арга Bishop simplified, Spencer, GLE гуравыг зэрэг сонгоно.</li>
+   <li><span class="menu">Boundaries → Add External Boundary</span>-аар 35°-ийн сул давхарга дундуур өнгөрөх энгийн трапец хэлбэрийн огтлол байгуулна. Давхаргын хоёр талд адил материал өгч болно; чухал нь сул давхарга дагуух гулсалтыг шалгах.</li>
+   <li><span class="menu">Properties → Define Materials</span>-д Хүснэгт дэх c′, φ′, γ-г оруулж, огтлолд ононо.</li>
+   <li><span class="menu">Surfaces → Surface Options</span>-д Block Search эсвэл Non-Circular сонгож, хайлтыг сул давхаргад чиглүүлнэ (Auto Refine).</li>
+   <li><span class="menu">Compute</span> дараад <span class="menu">Interpret</span>-д гурван аргын FoS-ыг тэмдэглэнэ.</li>
+   <li><span class="menu">Boundaries → Add Water Table</span>-аар устай хувилбарыг нэмж дахин тооцоолно.</li>
+  </ol>
+  <h5>Тайлангийн хүснэгт</h5>
+  <div class="tbl">
+  <table>
+   <caption><b>Хүснэгт Р.3.</b> Slide2-ын FoS, гар тооцоотой харьцуулалт. Өөрөө бөглөнө.</caption>
+   <thead><tr><th>Хувилбар</th><th class="num">Bishop</th><th class="num">Spencer</th><th class="num">GLE</th><th class="num">Гар тооцоо (1.3)</th></tr></thead>
+   <tbody>
+    <tr><th>Хуурай</th><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">1,35</td></tr>
+    <tr><th>Устай (u ≈ 30 кПа)</th><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">1,07</td></tr>
+   </tbody>
+  </table>
+  </div>
+  <h5>Хүлээгдэх чиг хандлага</h5>
+  <p>Slide2-ын зүсэлтийн аргууд хажуугийн хүчийг тооцдог тул нэг блокийн энгийн хүчний тэнцвэрээс (1.3) арай өөр, ерөнхийдөө ойролцоо (±0,05–0,10) утга өгөх ёстой. Гурван арга хоорондоо ойролцоо байх ёстой (Bishop, Spencer, GLE ойролцоогоор нэг зүсэлтийн механизмыг загварчилдаг). Ус нэмэхэд гурван аргын аль алинд нь FoS буурах ёстой. Хэрэв зөрүү 0,2-оос их бол сул давхаргын байрлал, материалын оноолт, усны түвшнээ шалга.</p>
+  <h5>Асуулт</h5>
+  <ol class="qlist">
+   <li>Slide2-ын гурван арга хоорондоо яагаад бүрэн ижил гарахгүй вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>Bishop зөвхөн хэвтээ хүчний тэнцвэрийг, Spencer ба GLE хэвтээ ба моментийн тэнцвэрийг зэрэг хангадаг тул зүсэлт хоорондын хүчний таамаглал өөр. Зөрүү ихэвчлэн жижиг байдаг.</div></details></li>
+   <li>Гар тооцоо ба Slide2-ын хоорондох зөрүү юунаас үүсэх вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>(1.3) нь нэг хатуу блокийн хүчний тэнцвэр; Slide2 нь огтлолыг зүсэлтэд хувааж, зүсэлт хоорондын хүчийг тооцдог тул огтлолын хэлбэрээс бага зэрэг хамаарна.</div></details></li>
+   <li>Энэ дасгал Лекц 1.4-ийн аль зарчмыг практикт харуулж байна вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>«FoS-ыг тайлбарлахад механизм, бат бөх, ус, геометрийн нөхцөл заавал хамт бичих ёстой» гэдгийг — гурван арга, хоёр усны нөхцөл өөр өөр тоо өгсөн ч бүгд ижил физик зарчимд тулгуурладаг.</div></details></li>
+  </ol>
+ </div>
+</section>
+<section class="col" id="r3">
+ <h3><span class="no">Р.3</span>Дасгал 2. Slide2 магадлалт шинжилгээ: ижил FoS, өөр найдвартай байдал</h3>
+ <div class="exercise">
+  <div class="ex-head"><span class="ex-no">Дасгал 2</span><span class="ex-title">σ<sub>FoS</sub>-ийг нүдээр харах</span><span class="ex-meta">45 минут. Лекц 1.5, 1.6.1</span></div>
+  <p><strong>Зорилго.</strong> Лекцийн Сектор A/B жишээнд μ<sub>FoS</sub> = 1,25 ижил боловч σ<sub>FoS</sub> нь 0,08 ба 0,20 гэж өгсөн (β<sub>A</sub> = 3,1, β<sub>B</sub> = 1,25). Slide2-ын <span class="menu">Probabilistic Analysis</span> ашиглан c′, φ′-г тархалттай хувьсагч болгож, найдвартай байдлын индекс, PoF програмаас өөрөө гарахыг ажиглана.</p>
+  <h5>Оролт <span class="tag">I</span></h5>
+  <p>Дасгал 1-ийн хуурай огтлолыг ашиглана. c′-ийг хэвийн тархалт, дундаж 25 кПа, φ′-ийг хэвийн тархалт, дундаж 32° гэж тохируулна.</p>
+  <div class="tbl">
+  <table>
+   <thead><tr><th>Хувилбар</th><th class="num">σ<sub>c′</sub></th><th class="num">σ<sub>φ′</sub></th><th>Лекцийн харгалзах σ<sub>FoS</sub></th></tr></thead>
+   <tbody>
+    <tr><th>«Сектор A» — бага хэлбэлзэл</th><td class="num">2 кПа</td><td class="num">1,5°</td><td>≈ 0,08</td></tr>
+    <tr><th>«Сектор B» — их хэлбэлзэл</th><td class="num">8 кПа</td><td class="num">4,5°</td><td>≈ 0,20</td></tr>
+   </tbody>
+  </table>
+  </div>
+  <h5>Алхам</h5>
+  <ol class="steps">
+   <li><span class="menu">Project Settings → Statistics</span>-ийг идэвхжүүлж, Monte Carlo, дээж 5 000 болгоно.</li>
+   <li><span class="menu">Properties → Define Materials → Statistics</span>-д c′, φ′-г Normal тархалт болгож, «Сектор A» баганын σ утгыг оруулна.</li>
+   <li><span class="menu">Compute</span> дараад <span class="menu">Interpret → Probabilistic</span>-д дундаж FoS, стандарт хазайлт, найдвартай байдлын индекс, PoF-ийг тэмдэглэнэ.</li>
+   <li>σ утгыг «Сектор B» баганынхаар солиод давтана.</li>
+   <li>Хоёр гистограммыг зэрэгцүүлж (нэг зурагт эсвэл дэлгэцийн хоёр зураг), тархалтын өргөнийг харьцуулна.</li>
+  </ol>
+  <h5>Хүлээгдэх чиг хандлага</h5>
+  <p>Программын Monte Carlo дээж, санамсаргүй үртэй холбоотой тул тодорхой оноо давхацахгүй; гэхдээ чиг хандлага тодорхой байх ёстой: дундаж FoS хоёр хувилбарт ойролцоо (≈ 1,2–1,3) байхад, «Сектор B» хувилбарын стандарт хазайлт хамаагүй том, найдвартай байдлын индекс бага, PoF мэдэгдэхүйц өндөр гарна. Лекцийн (1.7) томьёогоор гараар тооцсон β<sub>A</sub> ≈ 3,1 (PoF ≈ 0,1 %), β<sub>B</sub> ≈ 1,25 (PoF ≈ 10,6 %) чиглэлд ойртох ёстой; Monte Carlo-гийн тархалтын хэлбэр нормаль биш үед яг тэнцүү гарахгүй байж болно.</p>
+  <h5>Асуулт</h5>
+  <ol class="qlist">
+   <li>Дундаж FoS ойролцоо байхад PoF яагаад тэс өөр гарах вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>PoF нь тархалтын өргөнөөс (σ<sub>FoS</sub>) шууд хамаардаг; дундаж ижил ч тархалт өргөн бол FoS &lt; 1 болох талбай том байна.</div></details></li>
+   <li>Энэ дасгал үйлдвэрлэлийн шийдвэрт ямар практик зөвлөмж өгч байна вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>Ижил дундаж FoS-той хоёр секторыг ижил хянахгүй: тодорхойгүй байдал өндөр секторт нэмэлт хайгуул, мониторинг, эсвэл өндөр зорилтот FoS шаардана (Лекц 1.5).</div></details></li>
+   <li>Monte Carlo-гийн дээжийн тоог 500 болгоход үр дүн хэрхэн өөрчлөгдөх вэ? Яагаад?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>PoF-ийн тооцоо статистикийн алдаатай болж, ялангуяа PoF бага (Сектор A) үед тогтворгүй болно. Энэ бол загварын тодорхойгүй байдлын жишээ (Лекц 1.5).</div></details></li>
+  </ol>
+ </div>
+</section>
+<section class="col" id="r4">
+ <h3><span class="no">Р.4</span>Дасгал 3. Dips: 12 хэмжилт дүгнэлт өгөхөд хангалттай юу?</h3>
+ <div class="exercise">
+  <div class="ex-head"><span class="ex-no">Дасгал 3</span><span class="ex-title">Дээжийн хэмжээний асуулт</span><span class="ex-meta">30 минут. Семинар С.4, С.8</span></div>
+  <p><strong>Зорилго.</strong> Семинарын D03 бүртгэлд ганц ан цавын бүлгийн 12 хэмжилт байгаа. Энэ дасгал кинематик механизм тогтооход бус, харин «Dips-т өгөгдөл оруулах, туйлын дүрсийг унших, дээжийн хэмжээ хангалттай эсэхийг үнэлэх» чадварт чиглэнэ.</p>
+  <h5>Оролт <span class="tag">I</span></h5>
+  <p>D03: J1, унал/уналын чиглэл 052/64°-ийн эргэн тойронд тархсан 12 синтетик хэмжилт. Яг координатыг багш өгнө (сургалтын синтетик дээж); эсвэл дундаж 64° унал, 052° чиглэлийн эргэн тойронд ±8° санамсаргүй тархалттай өөрөө 12 хос үүсгэж болно.</p>
+  <h5>Алхам</h5>
+  <ol class="steps">
+   <li>Dips-ийг нээж шинэ файл үүсгэнэ. Чиглэлийн хэлбэр <span class="menu">Dip/DipDirection</span> эсэхийг шалгана.</li>
+   <li>12 хосыг оруулна. Бүлгийн шошго бүү оруул.</li>
+   <li><span class="menu">Pole Plot</span>, дараа нь <span class="menu">Contour Plot</span> харуулж бөөгнөрлийг ажиглана.</li>
+   <li><span class="menu">Statistics → Fisher</span>-ээр бүлгийн дундаж хавтгай, тархалтын коэффициентийг (K) гаргана.</li>
+   <li>Кинематик шинжилгээг ажиллуулж <em>болно</em>, гэхдээ дүгнэлтдээ «нэг бүлэг, n=12, өргөн тархалт» гэдгийг заавал бичнэ.</li>
+  </ol>
+  <h5>Хүлээгдэх чиг хандлага</h5>
+  <p>12 цэг нэг ерөнхий чиглэлийг харуулах ч Fisher-ийн тархалтын коэффициент багасаж (өргөн бөөгнөрөл), итгэлцлийн интервал том гарах ёстой. Хэрэв дасгалын өгөгдлийг өөрөө үүсгэсэн бол ±8°-ийн тархалттай 12 цэг дунджаараа 052/64°-т ойрхон, гэхдээ бие даасан тархалт харагдана. Энэ бол «кинематикийн хариулт буруу» гэсэн үг биш, «нэг долоо хоногийн 12 хэмжилтээр бүтцийн бүлгийг эцэслэн тогтоож болохгүй» гэсэн арга зүйн дүгнэлт (Семинар С.4, С.8).</p>
+  <h5>Асуулт</h5>
+  <ol class="qlist">
+   <li>12 хэмжилтээс гаргасан дундаж хавтгайг хажуугийн зураг төсөлд шууд ашиглаж болох уу?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>Үгүй. Дараагийн долоо хоногуудад (Семинар 6) илүү олон, илүү өргөн хамрах хүрээтэй хэмжилтээр баталгаажуулах хэрэгтэй.</div></details></li>
+   <li>Энэ дасгал Лекц 1.5-ын аль ангиллын тодорхойгүй байдлыг харуулж байна вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>Мэдлэгийн хязгаар (epistemic uncertainty) — өгөгдөл хүрэлцээгүйгээс үүссэн, нэмэлт хэмжилтээр багасах төрлийн тодорхойгүй байдал.</div></details></li>
+  </ol>
+ </div>
+</section>
+<section class="col" id="r5">
+ <h3><span class="no">Р.5</span>Дасгал 4. RS2: хүчний тэнцвэр ба хүчдэлийн арга (сонголтот)</h3>
+ <div class="exercise">
+  <div class="ex-head"><span class="ex-no">Дасгал 4</span><span class="ex-title">Хоёр арга, нэг асуулт</span><span class="ex-meta">Сонголтот. 45 минут</span></div>
+  <p><strong>Зорилго.</strong> Дасгал 1-ийн хуурай огтлолыг RS2-т төгсгөлөг элементийн аргаар шинжилж, зүсэлтийн бат бөхийг бууруулах (SSR) аргын эгзэгтэй SRF-ийг Slide2-ын хязгаарын тэнцвэрийн FoS-той харьцуулна.</p>
+  <ol class="steps">
+   <li>RS2-т шинэ файл нээж Дасгал 1-ийн гадаад хилээр огтлол байгуулна.</li>
+   <li><span class="menu">Mesh → Discretize and Mesh</span> ажиллуулна. Гурвалжин элемент, анхны нягтралаар эхэлнэ.</li>
+   <li>Загварын ёроолыг хоёр чиглэлд, хажуугийн хилүүдийг хэвтээ чиглэлд бэхэлнэ.</li>
+   <li>Дасгал 1-ийн материалыг оруулж, хүндийн хүчний ачааллаар анхны хүчдэлийг тохируулна.</li>
+   <li><span class="menu">Project Settings → Strength Reduction</span>-ийг идэвхжүүлж тооцоолно.</li>
+   <li><span class="menu">Interpret</span>-д эгзэгтэй SRF, нийт шилжилтийн контур, хамгийн их зүсэлтийн хэв гажилтын бүсийг харна.</li>
+  </ol>
+  <h5>Хүлээгдэх чиг хандлага</h5>
+  <p>Эгзэгтэй SRF Дасгал 1-ийн хязгаарын тэнцвэрийн FoS-той ойролцоо (ерөнхийдөө ±0,1–0,2) байх ёстой, учир нь ижил материал, ижил геометрийг өөр аргаар шинжилж байна. Хэв гажилтын бүс сул давхаргатай ойролцоо байх ёстой. Торлолыг нягтруулахад утга тогтворжих ёстой; тогтворгүй бол торлолын тодорхойгүй байдлыг тайланд заавал бичнэ.</p>
+  <h5>Асуулт</h5>
+  <ol class="qlist">
+   <li>Хоёр арга ижил асуултад (тэнцвэр алдагдах уу) хариулж байгаа ч тэнцвэрийг өөр аргаар шалгаж байна. Энэ ялгаа шийдвэрт ямар ач холбогдолтой вэ?
+    <details class="answer"><summary>Хариуны чиглэл</summary><div>Хоёр аргын ойролцоо үр дүн загварын баталгаажуулалтыг бэхжүүлнэ (Лекц 1.12-ын эсрэг шинжилгээний зарчимтай төстэй); зөрүү их бол механизм эсвэл хилийн нөхцөлийг дахин үзнэ.</div></details></li>
+  </ol>
+ </div>
+</section>
+<section class="col" id="r6">
+ <h3><span class="no">Р.6</span>Тайлан ба үнэлгээ</h3>
+ <p>Практикумын тайлан нэг Excel файл, нэг хуудас бичвэрээс бүрдэнэ. Excel-д Дасгал 1-ийн зургаан утга (гурван арга × хоёр усны нөхцөл), Дасгал 2-ын хоёр хувилбарын дундаж/стандарт хазайлт/PoF, Дасгал 3-ын Fisher K орно. Бичвэрт гурван дасгалыг холбосон нэг дүгнэлт бичнэ: нэг блокийн жишээнд FoS, тодорхойгүй байдал, өгөгдлийн хангалттай байдал тус тус юу хэлж, юу хэлж чадахгүй вэ.</p>
+ <p>Дүгнэлтийн өгүүлбэр бүрийн төгсгөлд <span class="tag">E</span>, <span class="tag">I</span>, <span class="tag">S</span>, <span class="tag">U</span> тэмдгийн аль нэгийг тавина. Тэмдэггүй өгүүлбэр үнэлгээнд тооцогдохгүй.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт Р.4.</b> Практикумын үнэлгээ</caption>
+  <thead><tr><th>Шалгуур</th><th>2 оноо</th><th>1 оноо</th><th>0 оноо</th></tr></thead>
+  <tbody>
+   <tr><th>Slide2 детерминист</th><td>Зургаан утга бүрэн, гар тооцоотой чиг хандлагаараа нийцсэн</td><td>Нэг, хоёр утга дутуу</td><td>Гар тооцоотой зөрчилдсөн боловч тайлбаргүй</td></tr>
+   <tr><th>Slide2 магадлалт</th><td>Хоёр хувилбарын харьцуулалт, β/PoF-ийн чиг хандлага зөв тайлбарласан</td><td>Тархалт зөв ч тайлбар сул</td><td>Зөвхөн нэг тоо</td></tr>
+   <tr><th>Dips</th><td>Дээжийн хэмжээний хязгаарлалтыг зөв дүгнэсэн</td><td>Хязгаарлалт дурдсан ч гүнзгийрээгүй</td><td>Кинематик дүгнэлт зарласан</td></tr>
+   <tr><th>Дүгнэлт</th><td>Масштаб, тодорхойгүй байдлыг ялгаж, нотолгооны тэмдэгтэй</td><td>Тэмдэг дутуу</td><td>«Тогтвортой» гэж зарласан</td></tr>
+   <tr><th>Файлын дэг</th><td>Нэршил, хувилбар бүрэн</td><td>Хэсэгчилсэн</td><td>Эмх замбараагүй</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="r7">
+ <h3><span class="no">Р.7</span>Лицензийн түгээмэл алдаа ба шийдэл</h3>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт Р.5.</b> Алдааны мэдэгдэл ба шийдэл</caption>
+  <thead><tr><th>Мэдэгдэл</th><th>Утга</th><th>Шийдэл</th></tr></thead>
+  <tbody>
+   <tr><th>Sentinel key not found (H0007)</th><td>Лицензийн сервертэй холбогдож чадсангүй</td><td>Сүлжээгээ шалга; лабораторийн машин бол тэнхимийн IT-д хандана</td></tr>
+   <tr><th>Please enter a valid product key</th><td>Код буруу хуулагдсан</td><td>Имэйлээс дахин хуулж, зай тэмдэгтгүй оруулна</td></tr>
+   <tr><th>Туршилтын хугацаа дуусч нээгдэхгүй</th><td>Хэвийн үзэгдэл</td><td>Тэнхимийн лицензээр үргэлжлүүлнэ</td></tr>
+   <tr><th>License Manager time is too out of sync</th><td>Компьютерийн цаг буруу</td><td><span class="menu">Settings → Time &amp; Language</span>-д цагийг автоматаар тохируулна</td></tr>
+   <tr><th>Суулгах эрх байхгүй</th><td>Администраторын эрх шаардлагатай</td><td>Лабораторийн машинд IT урьдчилан суулгана; семинараас өмнө лаборантад мэдэгдэнэ</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section id="app" class="part-opener">
+ <p class="roman" aria-hidden="true">Хавсралт</p>
+ <h2>Нэр томьёо ба эх сурвалж</h2>
+</section>
+<section class="col" id="glossary">
+ <h3>Нэр томьёоны толь</h3>
+ <p>Монгол стандарт хэрэглээг эхэнд, англи эх нэр томьёог араас нь өгөв. Лекц, семинар, програмын цэсэнд нэг ойлголт өөр нэрээр гарвал энэ хүснэгтээс тулгана.</p>
+ <div class="tbl">
+ <table>
+  <caption><b>Хүснэгт Х.1.</b> Монгол–англи нэр томьёо</caption>
+  <thead><tr><th>Монгол</th><th>English</th></tr></thead>
+  <tbody>
+   <tr><td>уурхайн хажуу</td><td>mine slope</td></tr>
+   <tr><td>догол</td><td>bench</td></tr>
+   <tr><td>доголын хоорондын хажуу</td><td>inter-ramp slope</td></tr>
+   <tr><td>нийт хажуу</td><td>overall slope</td></tr>
+   <tr><td>норм хүчдэл</td><td>normal stress</td></tr>
+   <tr><td>шүргэх хүчдэл</td><td>shear stress</td></tr>
+   <tr><td>үр дүнтэй хүчдэл</td><td>effective stress</td></tr>
+   <tr><td>нүх сүвний усны даралт</td><td>pore-water pressure</td></tr>
+   <tr><td>шүргэх бат бөх</td><td>shear strength</td></tr>
+   <tr><td>Мор–Кулоны шалгуур</td><td>Mohr–Coulomb criterion</td></tr>
+   <tr><td>холбоо бат бөх</td><td>cohesion</td></tr>
+   <tr><td>шүргэлтийн өнцөг</td><td>friction angle</td></tr>
+   <tr><td>хавтгай эвдрэл</td><td>planar failure</td></tr>
+   <tr><td>шаантаг эвдрэл</td><td>wedge failure</td></tr>
+   <tr><td>дугуй буюу эргэлтийн эвдрэл</td><td>circular/rotational failure</td></tr>
+   <tr><td>хөмрөх эвдрэл</td><td>toppling</td></tr>
+   <tr><td>чулуу унал</td><td>rockfall</td></tr>
+   <tr><td>урсац хэлбэрийн эвдрэл</td><td>flow/debris flow</td></tr>
+   <tr><td>аюулгүйн коэффициент</td><td>factor of safety, FoS</td></tr>
+   <tr><td>хязгаарын тэнцвэрийн арга</td><td>limit equilibrium method</td></tr>
+   <tr><td>хязгааргүй хажуу</td><td>infinite slope</td></tr>
+   <tr><td>усны даралтын харьцаа</td><td>pore pressure ratio, r<sub>u</sub></td></tr>
+   <tr><td>эвдрэлийн магадлал</td><td>probability of failure, PoF</td></tr>
+   <tr><td>найдвартай байдлын индекс</td><td>reliability index, β</td></tr>
+   <tr><td>эрсдэл</td><td>risk</td></tr>
+   <tr><td>өртөлт</td><td>exposure</td></tr>
+   <tr><td>өгөгдлийн эзэн</td><td>data owner</td></tr>
+   <tr><td>шийдвэрийн эзэн</td><td>decision owner</td></tr>
+   <tr><td>дохиолол ба хариу арга хэмжээний журам</td><td>Trigger Action Response Plan, TARP</td></tr>
+   <tr><td>өгөгдлийн гарал мөр</td><td>data provenance</td></tr>
+   <tr><td>түр зогсоох зааг</td><td>hold point</td></tr>
+  </tbody>
+ </table>
+ </div>
+</section>
+<section class="col" id="sources">
+ <h3>Эх сурвалж</h3>
+ <ol class="refs">
+  <li>Abramson, L.W., Lee, T.S., Sharma, S. &amp; Boyce, G.M. <em>Slope Stability and Stabilization Methods.</em> 2nd ed. Wiley, 2002.</li>
+  <li>Read, J. &amp; Stacey, P. (eds.) <em>Guidelines for Open Pit Slope Design.</em> CSIRO Publishing, 2009.</li>
+  <li>Wyllie, D.C. &amp; Mah, C.W. <em>Rock Slope Engineering: Civil and Mining.</em> 4th ed. Spon Press, 2004.</li>
+  <li>Terzaghi, K. <em>Theoretical Soil Mechanics.</em> Wiley, 1943.</li>
+  <li>Bishop, A.W. The use of the slip circle in the stability analysis of slopes. <em>Géotechnique</em>, 1955.</li>
+  <li>Darling, P. (ed.) <em>SME Mining Engineering Handbook.</em> 3rd ed. SME, 2011.</li>
+  <li>Rocscience Inc. Slide2, Dips, RS2 програмын хэрэглэгчийн гарын авлага ба tutorial. rocscience.com.</li>
+  <li>CME314 Seminar 01. Data, Evidence, and Decision Mapping for a Mine Slope Problem. Долоо хоног 1-ийн эх.</li>
+  <li>Slope_Stability_Terminology_MN_EN_v2.docx — монгол–англи нэр томьёоны нэг мөр хэрэглээ.</li>
+ </ol>
+ <p class="where">Семинар, практикумын бүх тоон өгөгдөл CME314-SYN-W01-v1.0 синтетик багцаас эсвэл түүнээс тооцоологдсон <span class="tag">I</span>. Баталгаажаагүй вэб эх сурвалж ашиглаагүй.</p>
+</section>
+<footer class="colophon">
+ C.ME314 Уурхайн хажуугийн тогтворжилт. Бүлэг 1.<br>
+ Уурхайн технологийн тэнхим, ШУТИС ГУУС, 2026.
+</footer>
+</main>
+</div>
+<script>
+(function(){
+  /* TOC open by default on wide screens */
+  var d=document.getElementById('tocd');
+  var mq=window.matchMedia('(min-width:1080px)');
+  function sync(){ if(mq.matches){d.setAttribute('open','');} }
+  sync(); if(mq.addEventListener){mq.addEventListener('change',sync);}
+  d.addEventListener('click',function(e){ if(e.target.tagName==='A' && !mq.matches){ d.removeAttribute('open'); } });
+
+  /* theme toggle */
+  var root=document.documentElement;
+  try{ var t=localStorage.getItem('cme314-theme'); if(t){root.setAttribute('data-theme',t);} }catch(e){}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    if(!cur){ cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'; }
+    var nx = cur==='dark' ? 'light':'dark';
+    root.setAttribute('data-theme',nx);
+    try{ localStorage.setItem('cme314-theme',nx);}catch(e){}
+  });
+
+  /* current section in TOC */
+  var links={}; document.querySelectorAll('nav.toc ol ol a').forEach(function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  var ids=Object.keys(links), secs=ids.map(function(id){return document.getElementById(id);});
+  var ticking=false;
+  function mark(){
+    ticking=false; var lim=window.innerHeight*0.3, cur=null;
+    for(var i=0;i<secs.length;i++){ if(secs[i] && secs[i].getBoundingClientRect().top<lim) cur=ids[i]; }
+    ids.forEach(function(id){ links[id].classList.toggle('here', id===cur); });
+  }
+  window.addEventListener('scroll',function(){ if(!ticking){ticking=true; requestAnimationFrame(mark);} },{passive:true});
+  mark();
+
+  /* Figure 1.2 — infinite-slope FoS calculator */
+  var svg=document.getElementById('fosSvg'); if(!svg) return;
+  var inp={beta:document.getElementById('in-fbeta'),phi:document.getElementById('in-fphi'),c:document.getElementById('in-fc'),ru:document.getElementById('in-fru')};
+  var out={beta:document.getElementById('o-fbeta'),phi:document.getElementById('o-fphi'),c:document.getElementById('o-fc'),ru:document.getElementById('o-fru'),fos:document.getElementById('o-ffos')};
+  var GAMMA=20, Z=6;
+  function f(x,k){return x.toFixed(k).replace('.',',');}
+  function draw(){
+    var beta=+inp.beta.value, phi=+inp.phi.value, c=+inp.c.value, ru=+inp.ru.value;
+    out.beta.textContent=beta+'°'; out.phi.textContent=phi+'°'; out.c.textContent=c+' кПа'; out.ru.textContent=f(ru,2);
+    var bR=beta*Math.PI/180, pR=phi*Math.PI/180;
+    var u=ru*GAMMA*Z;
+    var num=c+(GAMMA*Z*Math.cos(bR)*Math.cos(bR)-u)*Math.tan(pR);
+    var den=GAMMA*Z*Math.sin(bR)*Math.cos(bR);
+    var fos=num/den;
+    out.fos.textContent=f(fos,2);
+    /* geometry */
+    var x0=40, y0=250, L=300, dpx=40;
+    var x1=x0+L*Math.cos(bR), y1=y0-L*Math.sin(bR);
+    var nx=Math.sin(bR), ny=Math.cos(bR);
+    var sx0=x0+nx*dpx, sy0=y0+ny*dpx, sx1=x1+nx*dpx, sy1=y1+ny*dpx;
+    document.getElementById('f-slope').setAttribute('points', x0+','+y0+' '+x1.toFixed(1)+','+y1.toFixed(1)+' '+sx1.toFixed(1)+','+sy1.toFixed(1)+' '+sx0.toFixed(1)+','+sy0.toFixed(1));
+    document.getElementById('f-slip').setAttribute('x1',sx0.toFixed(1)); document.getElementById('f-slip').setAttribute('y1',sy0.toFixed(1));
+    document.getElementById('f-slip').setAttribute('x2',sx1.toFixed(1)); document.getElementById('f-slip').setAttribute('y2',sy1.toFixed(1));
+    var mx=(x0+x1)/2+nx*dpx*0.4, my=(y0+y1)/2+ny*dpx*0.4;
+    document.getElementById('f-w').setAttribute('d','M'+mx.toFixed(1)+','+my.toFixed(1)+' L'+mx.toFixed(1)+','+(my+55).toFixed(1));
+    document.getElementById('f-wlab').setAttribute('x',mx+8); document.getElementById('f-wlab').setAttribute('y',my+35);
+    var rr=34;
+    document.getElementById('f-uarc').setAttribute('d','M'+(x0+rr)+','+y0+' A'+rr+','+rr+' 0 0 0 '+(x0+rr*Math.cos(bR)).toFixed(1)+','+(y0-rr*Math.sin(bR)).toFixed(1));
+    document.getElementById('f-blbl').setAttribute('x',x0+rr+8); document.getElementById('f-blbl').setAttribute('y',y0-6);
+    document.getElementById('f-sum').textContent='FoS '+f(fos,2)+', налуу '+beta+' градус, r subscript u '+f(ru,2);
+  }
+  Object.values(inp).forEach(function(el){el.addEventListener('input',draw);});
+  function setv(beta,phi,c,ru){inp.beta.value=beta;inp.phi.value=phi;inp.c.value=c;inp.ru.value=ru;draw();}
+  document.getElementById('p-fdry').addEventListener('click',function(){setv(35,32,10,0);});
+  document.getElementById('p-fwet').addEventListener('click',function(){setv(35,32,10,0.4);});
+  draw();
+})();
+</script>
+</body>
+</html>
